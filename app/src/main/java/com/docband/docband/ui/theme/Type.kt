@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.sp
 import com.docband.docband.R
 
 
-val MontserratFamily = FontFamily(
+val montserratFamily = FontFamily(
 
     Font(R.font.montserrat_black, FontWeight.Black),
     Font(R.font.montserrat_bold, FontWeight.Bold),
@@ -25,7 +25,7 @@ val MontserratFamily = FontFamily(
 
 val Typography = Typography(
     bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = montserratFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
