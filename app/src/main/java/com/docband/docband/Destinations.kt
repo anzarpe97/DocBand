@@ -1,0 +1,12 @@
+package com.docband.docband
+
+sealed class Destinations (
+
+    val route:String
+
+){
+
+    object LoginScreen: Destinations ("login")
+    object NewUserR: Destinations ("registro")
+
+}

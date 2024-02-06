@@ -11,8 +11,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -35,76 +40,84 @@ import androidx.compose.ui.unit.sp
 import com.docband.docband.R
 import com.docband.docband.ui.theme.montserratFamily
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextFieldDefaults
+import com.docband.docband.ui.theme.DocBandTheme
 
 
-@Preview(showBackground = true, showSystemUi = true, device = "id:pixel_7")
+
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navRegistro : () -> Unit) {
     Column(modifier = Modifier.fillMaxHeight()) {
 
         Column {
 
-            Login(Modifier.align(Alignment.Start))
+
+            Login(Modifier.align(Alignment.Start), navRegistro)
+
+
         }
     }
 }
 
 @Composable
-fun Login(modifier: Modifier) {
+fun Login(modifier: Modifier,navRegistro : () -> Unit) {
+    DocBandTheme {
+        Column(modifier = Modifier) {
 
-    Column(modifier = Modifier) {
+            HeaderImage()
 
-        HeaderImage()
-
-
-        Column(
-            modifier = Modifier
-                .padding(25.dp)
-                .fillMaxWidth(),
-        ) {
-            Text(
-                text = "DocBand",
-                fontFamily = montserratFamily,
-                fontWeight = FontWeight.Black,
-                fontSize = 30.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.padding(10.dp))
 
             Column(
                 modifier = Modifier
+                    .padding(25.dp)
                     .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                MyTextInput("Usuario")
-                UserField()
-            }
-            Spacer(modifier = Modifier.padding(10.dp))
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                MyTextInput("Contraseña")
-                PasswordField()
-            }
+                Text(
+                    text = "DocBand",
+                    fontFamily = montserratFamily,
+                    fontWeight = FontWeight.Black,
+                    fontSize = 30.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.padding(10.dp))
 
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 40.dp, top = 15.dp, end = 40.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ){
-                ForgotPassword()
-                AreUNew()
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    MyTextInput("Usuario")
+                    UserField()
+                }
+                Spacer(modifier = Modifier.padding(10.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    MyTextInput("Contraseña")
+                    PasswordField()
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 40.dp, top = 15.dp, end = 40.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    ForgotPassword()
+                    AreUNew(navRegistro)
+                }
+                Spacer(modifier = Modifier.padding(15.dp))
+                ButtonLog(Modifier.align(Alignment.CenterHorizontally), )
+
             }
-            Spacer(modifier = Modifier.padding(15.dp))
-            ButtonLog(Modifier.align(Alignment.CenterHorizontally))
 
         }
-
-
     }
 
 }
@@ -120,12 +133,26 @@ fun UserField() {
         onValueChange = { name1 = it },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         singleLine = true,
-        textStyle = TextStyle(fontSize = 20.sp),
+        textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
         maxLines = 1,
+        shape = RoundedCornerShape(12.dp),
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Filled.AccountCircle,
+                contentDescription = "User",
+                tint = MaterialTheme.colorScheme.primary
+            )
+        },
+        colors = TextFieldDefaults.textFieldColors(
+
+            unfocusedIndicatorColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent
+
+        )
     )
 
 }
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordField() {
 
@@ -136,9 +163,21 @@ fun PasswordField() {
         onValueChange = { name = it },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         singleLine = true,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Filled.Info,
+                contentDescription = "User",
+                tint = MaterialTheme.colorScheme.primary
+            )
+        },
         maxLines = 1,
-        textStyle = TextStyle(fontSize = 20.sp),
+        textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
         shape = RoundedCornerShape(12.dp),
+        colors = TextFieldDefaults.textFieldColors(
+
+            unfocusedIndicatorColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+        ),
     )
 
 }
@@ -157,7 +196,6 @@ fun HeaderImage() {
 
 @Composable
 fun MyTextInput(inputText: String) {
-    val myColor = Color(0xFFD50000)
 
     Text(
         text = inputText,
@@ -165,6 +203,7 @@ fun MyTextInput(inputText: String) {
         fontWeight = FontWeight.Black,
         textAlign = TextAlign.Left,
         fontSize = 15.sp,
+        color = MaterialTheme.colorScheme.primary,
         modifier = Modifier
             .padding(bottom = 5.dp)
             .width(280.dp)
@@ -173,13 +212,14 @@ fun MyTextInput(inputText: String) {
 }
 
 @Composable
-fun AreUNew() {
+fun AreUNew(navRegistro : () -> Unit) {
 
     Text(
         text = "¿Eres Nuevo?",
-        modifier = Modifier.clickable { },
-        fontSize = 10.sp,
-        fontWeight = FontWeight.Black
+        modifier = Modifier.clickable {navRegistro() },
+        fontSize = 13.sp,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.primary
     )
 
 }
@@ -189,9 +229,10 @@ fun ForgotPassword() {
 
     Text(
         text = "¿Olvidaste tu Contraseña?",
-        modifier = Modifier.clickable { },
-        fontSize = 10.sp,
-        fontWeight = FontWeight.Black
+        modifier = Modifier.clickable {},
+        fontSize = 13   .sp,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.primary
     )
 
 }
@@ -199,13 +240,16 @@ fun ForgotPassword() {
 @Composable
 fun ButtonLog(modifier: Modifier) {
 
-        Button(onClick = { /*TODO*/ }, modifier
+    Button(
+        onClick = {  }, modifier
             .width(250.dp)
             .height(48.dp)
-            ) {
+    ) {
 
-            Text(text = "Iniciar Sesión")
+        Text(text = "Iniciar Sesión", color = MaterialTheme.colorScheme.inverseOnSurface)
 
-        }
+    }
 
 }
+
+
