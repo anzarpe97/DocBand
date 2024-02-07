@@ -297,7 +297,7 @@ fun ButtonRegister(modifier: Modifier, med: Boolean, navLogin: () -> Unit) {
 
     ) {
 
-        Text(text = "Iniciar Sesión", color = MaterialTheme.colorScheme.inverseOnSurface)
+        Text(text = "Registrar", color = MaterialTheme.colorScheme.inverseOnSurface)
 
     }
 
