@@ -1,7 +1,9 @@
 package com.docband.docband.login.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,7 +33,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.docband.docband.R
@@ -39,12 +40,14 @@ import com.docband.docband.ui.theme.montserratFamily
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.platform.LocalContext
 import com.docband.docband.ui.theme.DocBandTheme
 
 
-@Preview(showBackground = true, showSystemUi = true, device = "id:pixel_7")
+
+
 @Composable
-fun NewUserR() {
+fun NewUserR(navLogin : () -> Unit) {
 
     DocBandTheme {
 
@@ -114,24 +117,9 @@ fun NewUserR() {
 
                 RPasswordNewUser()
 
-                Spacer(modifier = Modifier.padding(15.dp))
+                Spacer(modifier = Modifier.padding(5.dp))
 
-                Row {
-
-                    MedCheck()
-                    Text(
-                        text = "¿Eres Medico?",
-                        modifier = Modifier.padding(top = 13.dp),
-                        fontFamily = montserratFamily,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.SemiBold
-                    )
-
-                }
-
-                Spacer(modifier = Modifier.padding(20.dp))
-
-                ButtonRegister(Modifier.align(Alignment.CenterHorizontally))
+                ButtonRegister(Modifier.align(Alignment.CenterHorizontally), MedCheck(),navLogin)
 
             }
 
@@ -256,21 +244,54 @@ fun RPasswordNewUser() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MedCheck() {
+fun MedCheck() : Boolean {
 
-    val checked = remember { mutableStateOf(true) }
-    Checkbox(
-        checked = checked.value,
-        onCheckedChange = { checked.value = it },
+    val checked = remember { mutableStateOf(false) }
 
+    Row (modifier = Modifier.clickable { checked.value = !checked.value}){
+
+        Checkbox(
+            checked = checked.value,
+            onCheckedChange = { checked.value = it },
+
+            )
+
+        Text(
+            text = "¿Eres Medico?",
+            modifier = Modifier.padding(top = 13.dp),
+            fontFamily = montserratFamily,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.SemiBold
         )
+        Spacer(modifier = Modifier.padding(20.dp))
+    }
+
+    return checked.value
+
 }
 
 @Composable
-fun ButtonRegister(modifier: Modifier) {
+fun ButtonRegister(modifier: Modifier, med: Boolean, navLogin: () -> Unit) {
 
+    val context = LocalContext.current
+
+    Spacer(modifier = Modifier.padding(15.dp))
     Button(
-        onClick = {  }, modifier
+        onClick = {
+
+            if (med) {
+                Toast.makeText(context, "Registro Exitoso (medico)", Toast.LENGTH_SHORT).show()
+                navLogin()
+
+            }
+
+            else{
+
+                Toast.makeText(context, "Registro Exitoso (Paciente)", Toast.LENGTH_SHORT).show()
+                navLogin()
+            }
+
+        }, modifier
             .width(250.dp)
             .height(48.dp)
 

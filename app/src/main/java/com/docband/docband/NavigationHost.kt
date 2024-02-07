@@ -28,7 +28,13 @@ fun NavigationHost(){
 
         composable(NewUserR.route){
 
-            NewUserR()
+            NewUserR(navLogin ={
+
+                navController.navigate(LoginScreen.route)
+
+            })
+
+
 
         }
 
