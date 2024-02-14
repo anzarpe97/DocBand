@@ -9,4 +9,6 @@ sealed class Destinations (
     object LoginScreen: Destinations ("login")
     object NewUserR: Destinations ("registro")
 
+    object HomeView: Destinations("home")
+
 }

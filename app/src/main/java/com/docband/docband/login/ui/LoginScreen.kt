@@ -48,13 +48,13 @@ import com.docband.docband.ui.theme.DocBandTheme
 
 
 @Composable
-fun LoginScreen(navRegistro : () -> Unit) {
+fun LoginScreen(navRegistro : () -> Unit, navHome : () -> Unit) {
     Column(modifier = Modifier.fillMaxHeight()) {
 
         Column {
 
 
-            Login(Modifier.align(Alignment.Start), navRegistro)
+            Login(Modifier.align(Alignment.Start), navRegistro, navHome)
 
 
         }
@@ -62,7 +62,7 @@ fun LoginScreen(navRegistro : () -> Unit) {
 }
 
 @Composable
-fun Login(modifier: Modifier,navRegistro : () -> Unit) {
+fun Login(modifier: Modifier,navRegistro : () -> Unit, navHome : () -> Unit) {
     DocBandTheme {
         Column(modifier = Modifier) {
 
@@ -113,7 +113,8 @@ fun Login(modifier: Modifier,navRegistro : () -> Unit) {
                     AreUNew(navRegistro)
                 }
                 Spacer(modifier = Modifier.padding(15.dp))
-                ButtonLog(Modifier.align(Alignment.CenterHorizontally), )
+
+                ButtonLog(Modifier.align(Alignment.CenterHorizontally), navHome)
 
             }
 
@@ -238,10 +239,10 @@ fun ForgotPassword() {
 }
 
 @Composable
-fun ButtonLog(modifier: Modifier) {
+fun ButtonLog(modifier: Modifier, navHome : () -> Unit) {
 
     Button(
-        onClick = {  }, modifier
+        onClick = { navHome() }, modifier
             .width(250.dp)
             .height(48.dp)
     ) {

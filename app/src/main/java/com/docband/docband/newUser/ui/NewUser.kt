@@ -41,13 +41,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
 import com.docband.docband.ui.theme.DocBandTheme
 
-
-
-
 @Composable
-fun NewUserR(navLogin : () -> Unit) {
+fun NewUserR(navController: NavController) {
 
     DocBandTheme {
 
@@ -119,7 +117,7 @@ fun NewUserR(navLogin : () -> Unit) {
 
                 Spacer(modifier = Modifier.padding(5.dp))
 
-                ButtonRegister(Modifier.align(Alignment.CenterHorizontally), MedCheck(),navLogin)
+                ButtonRegister(Modifier.align(Alignment.CenterHorizontally), MedCheck(), navController)
 
             }
 
@@ -128,6 +126,7 @@ fun NewUserR(navLogin : () -> Unit) {
     }//DocBandTheme
 
 }//NewUserR
+
 
 @Composable
 fun textsRegister(inputText: String) {
@@ -271,7 +270,7 @@ fun MedCheck() : Boolean {
 }
 
 @Composable
-fun ButtonRegister(modifier: Modifier, med: Boolean, navLogin: () -> Unit) {
+fun ButtonRegister(modifier: Modifier, med: Boolean, navController: NavController) {
 
     val context = LocalContext.current
 
@@ -281,14 +280,14 @@ fun ButtonRegister(modifier: Modifier, med: Boolean, navLogin: () -> Unit) {
 
             if (med) {
                 Toast.makeText(context, "Registro Exitoso (medico)", Toast.LENGTH_SHORT).show()
-                navLogin()
+                navController.popBackStack()
 
             }
 
             else{
 
                 Toast.makeText(context, "Registro Exitoso (Paciente)", Toast.LENGTH_SHORT).show()
-                navLogin()
+                navController.popBackStack()
             }
 
         }, modifier
