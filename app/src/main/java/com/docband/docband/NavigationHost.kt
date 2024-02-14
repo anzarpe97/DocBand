@@ -5,6 +5,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.docband.docband.Destinations.*
+import com.docband.docband.HomeView.HomeView
+import com.docband.docband.InfoView.InfoView
 import com.docband.docband.login.ui.LoginScreen
 import com.docband.docband.login.ui.NewUserR
 
@@ -24,6 +26,16 @@ fun NavigationHost(){
 
             NewUserR(NavControler)
 
+        }
+
+        composable (HomeView.route){
+
+            HomeView(navHome = {NavControler.navigate(InfoView.route)})
+        }
+
+        composable (InfoView.route){
+
+            InfoView(NavControler)
         }
 
     }

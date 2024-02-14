@@ -55,7 +55,7 @@ fun NewUserR(navController: NavController) {
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.primary)
                     .fillMaxWidth()
-                    .height(100.dp),
+                    .height(150.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
 
             ) {
@@ -64,7 +64,7 @@ fun NewUserR(navController: NavController) {
                     painter = painterResource(id = R.drawable.iconuser),
                     contentDescription = "Ho",
                     modifier = Modifier
-                        .size(65.dp)
+                        .size(100.dp)
                         .padding(10.dp)
                 )
                 Spacer(modifier = Modifier.padding(1.dp))
@@ -73,7 +73,7 @@ fun NewUserR(navController: NavController) {
                     fontFamily = montserratFamily,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
-                    fontSize = 20.sp
+                    fontSize = 30.sp
                 )
             }//Column
 

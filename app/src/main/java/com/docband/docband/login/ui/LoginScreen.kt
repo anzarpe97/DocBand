@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.docband.docband.R
 import com.docband.docband.ui.theme.montserratFamily
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextFieldDefaults
@@ -62,7 +63,7 @@ fun LoginScreen(navRegistro : () -> Unit, navHome : () -> Unit) {
 }
 
 @Composable
-fun Login(modifier: Modifier,navRegistro : () -> Unit, navHome : () -> Unit) {
+fun Login(modifier: Modifier, navRegistro : () -> Unit, navHome : () -> Unit) {
     DocBandTheme {
         Column(modifier = Modifier) {
 
@@ -127,11 +128,11 @@ fun Login(modifier: Modifier,navRegistro : () -> Unit, navHome : () -> Unit) {
 @Composable
 fun UserField() {
 
-    var name1 by remember { mutableStateOf("") }
+    var emailUser  by remember { mutableStateOf ("") }
 
     TextField(
-        value = name1,
-        onValueChange = { name1 = it },
+        value = emailUser,
+        onValueChange = { emailUser = it },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         singleLine = true,
         textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
@@ -242,12 +243,13 @@ fun ForgotPassword() {
 fun ButtonLog(modifier: Modifier, navHome : () -> Unit) {
 
     Button(
-        onClick = { navHome() }, modifier
+        onClick = {navHome()}, modifier
             .width(250.dp)
             .height(48.dp)
     ) {
 
         Text(text = "Iniciar Sesión", color = MaterialTheme.colorScheme.inverseOnSurface)
+
 
     }
 

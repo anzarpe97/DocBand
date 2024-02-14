@@ -27,9 +27,9 @@ import com.docband.docband.R
 import com.docband.docband.ui.theme.DocBandTheme
 import com.docband.docband.ui.theme.montserratFamily
 
-@Preview(showBackground = true)
+
 @Composable
-fun HomeView(){
+fun HomeView(navHome : () -> Unit){
     DocBandTheme {
 
         Column (modifier = Modifier.fillMaxSize()) {
@@ -41,7 +41,7 @@ fun HomeView(){
                 .padding(40.dp),
                 verticalArrangement = Arrangement.Center){
 
-                InfoButton(Modifier.fillMaxWidth())
+                InfoButton(Modifier.fillMaxWidth(), navHome)
                 Spacer(modifier = Modifier.padding(40.dp))
                 MyQR(Modifier.fillMaxWidth())
                 Spacer(modifier = Modifier.padding(40.dp))
@@ -63,6 +63,7 @@ fun BoxHeader(modifier: Modifier, userName : String) {
             .fillMaxWidth()
             .height(150.dp), horizontalAlignment = Alignment.CenterHorizontally){
 
+        Spacer(modifier = Modifier.padding(5.dp))
         Image(
             painter = painterResource(id = R.drawable.iconuser),
             contentDescription = "Ho",
@@ -79,9 +80,9 @@ fun BoxHeader(modifier: Modifier, userName : String) {
 }
 
 @Composable
-fun InfoButton(modifier: Modifier) {
+fun InfoButton(modifier: Modifier, navHome : () -> Unit) {
 
-    Button(onClick = { /*TODO*/ }, modifier.height(80.dp)) {
+    Button(onClick = {navHome() }, modifier.height(80.dp)) {
 
         Text(text = "Mi Información", fontSize = 20.sp, fontFamily = montserratFamily)
 
