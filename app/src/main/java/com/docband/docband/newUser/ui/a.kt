@@ -22,7 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-@Preview(showBackground = true)
+
 @Composable
 fun Demo_ExposedDropdownMenuBox() {
     val context = LocalContext.current
@@ -67,3 +67,4 @@ fun Demo_ExposedDropdownMenuBox() {
         }
     }
 }
+

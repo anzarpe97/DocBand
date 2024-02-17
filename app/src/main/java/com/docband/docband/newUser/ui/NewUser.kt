@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 
 package com.docband.docband.login.ui
 
@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,13 +19,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -45,13 +47,17 @@ import androidx.compose.ui.unit.sp
 import com.docband.docband.R
 import com.docband.docband.ui.theme.montserratFamily
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.navigation.NavController
 import com.docband.docband.ui.theme.DocBandTheme
 import java.time.Instant
@@ -90,38 +96,77 @@ fun NewUserR(navController: NavController) {
                 )
             }//Column
 
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 60.dp, end = 60.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start
-            ) {
+            LazyColumn() {
 
                 //Informacion
                 item {
 
-                    InfomationContent()
+                    Column ( modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 60.dp, end = 60.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.Start){
+
+                        InfomationContent()
+                    }
+
+                }
+
+                //Habitos
+
+                item {
+
+                    Column ( modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 60.dp, end = 60.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.Start){
+
+                        HabitsContent()
+                    }
 
                 }
 
                 //Cuenta Usuario
                 item {
-                    Spacer(modifier = Modifier.padding(15.dp))
-                    DividerContent()
 
-                    AccountContent()
+                    Column ( modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 60.dp, end = 60.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.Start){
+
+                        Spacer(modifier = Modifier.padding(15.dp))
+
+                        DividerContent("Usuario y Contraseña")
+
+                        AccountContent()
+                    }
+
+
 
                 }
 
                 // Boton Enviar
                 item {
 
-                    ButtonRegister(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        MedCheck(),
-                        navController
-                    )
+                    Column ( modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 60.dp, end = 60.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.Start){
+
+                        Spacer(modifier = Modifier.padding(15.dp))
+
+                        ButtonRegister(
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            MedCheck(),
+                            navController)
+
+                        Spacer(modifier = Modifier.padding(15.dp))
+                    }
+
+
 
                 }
 
@@ -149,23 +194,41 @@ fun AccountContent() {
 @Composable
 fun InfomationContent() {
 
+    Spacer(modifier = Modifier.padding(10.dp))
+
+    DividerContent(nameDivider = "Informacion Personal")
+
     IUserName()
     NumCedula()
+    Gender()
     DateUser()
     PlaceBrith()
-    Adress()
-    UsualAdress()
+    Religion()
+    Address()
+    UsualAddress()
     PhoneNumber()
     FPhoneNumber()
     Occupation()
+    Etnia()
+    TypeBlood()
 
+}
+
+@Composable
+fun HabitsContent(){
+    Spacer(modifier = Modifier.padding(15.dp))
+    DividerContent(nameDivider = "Habitos")
+    Food()
+    Drunk()
+    Smoke()
+    Coffe()
 }
 
 //DIVIDER
 @Composable
-fun DividerContent() {
+fun DividerContent(nameDivider : String) {
 
-    TextTitle(textTile = "Usuario y Contraseña")
+    TextTitle(textTile = nameDivider)
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -221,7 +284,7 @@ fun IUserName() {
 
     var iUserName by remember { mutableStateOf("") }
 
-    Spacer(modifier = Modifier.padding(15.dp))
+    Spacer(modifier = Modifier.padding(5.dp))
 
     textsRegister(inputText = "Nombre y Apellido")
 
@@ -373,7 +436,7 @@ fun PlaceBrith (){
 }
 
 @Composable
-fun Adress (){
+fun Address (){
 
     var adress by remember { mutableStateOf("") }
 
@@ -406,7 +469,7 @@ fun Adress (){
 }
 
 @Composable
-fun UsualAdress(){
+fun UsualAddress(){
 
     var usualAdress by remember { mutableStateOf("") }
 
@@ -531,6 +594,416 @@ fun Occupation(){
 
     Spacer(modifier = Modifier.padding(5.dp))
 
+}
+
+@Composable
+fun Gender() {
+    val context = LocalContext.current
+    val gener = arrayOf("Masculino", "Femenino", "Otro")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(gener[0]) }
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    textsRegister(inputText = "Genero")
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            }
+        ) {
+            TextField(
+                value = selectedText,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier.menuAnchor()
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                gener.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item) },
+                        onClick = {
+                            selectedText = item
+                            expanded = false
+
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+}
+
+@Composable
+fun Religion() {
+    val context = LocalContext.current
+    val religion = arrayOf("", "Cristiana", "Catolica", "Testigos de Jehova", "Ninguna")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(religion[0]) }
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    textsRegister(inputText = "Religión")
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            }
+        ) {
+            TextField(
+                value = selectedText,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier.menuAnchor()
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                religion.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item) },
+                        onClick = {
+                            selectedText = item
+                            expanded = false
+
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun Etnia() {
+    val context = LocalContext.current
+    val etnia = arrayOf("", "Si", "No")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(etnia[0]) }
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    textsRegister(inputText = "Etnia")
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            }
+        ) {
+            TextField(
+                value = selectedText,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier.menuAnchor()
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                etnia.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item) },
+                        onClick = {
+                            selectedText = item
+                            expanded = false
+
+                        }
+                    )
+                }
+            }
+        }
+    }
+    Spacer(modifier = Modifier.padding(5.dp))
+}
+@Composable
+fun TypeBlood() {
+    val context = LocalContext.current
+    val typeBlood = arrayOf("", "A+", "A-","B+","B-","AB+","AB-", "AB-", "O+", "O-")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(typeBlood[0]) }
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    textsRegister(inputText = "Tipo de Sangre")
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            }
+        ) {
+            TextField(
+                value = selectedText,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier.menuAnchor()
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                typeBlood.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item) },
+                        onClick = {
+                            selectedText = item
+                            expanded = false
+
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Habits
+
+@Composable
+fun Food() {
+    val context = LocalContext.current
+    val typeBlood = arrayOf("", "Balanceada", "No Balanceada")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(typeBlood[0]) }
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    textsRegister(inputText = "Tipo de Alimentación")
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            }
+        ) {
+            TextField(
+                value = selectedText,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier.menuAnchor()
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                typeBlood.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item) },
+                        onClick = {
+                            selectedText = item
+                            expanded = false
+
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun Smoke() {
+    val context = LocalContext.current
+    val typeBlood = arrayOf("", "Frecuente","Muy Frecuente", "Ocacional", "Muy Poco", "No")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(typeBlood[0]) }
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    textsRegister(inputText = "Tabáquico")
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            }
+        ) {
+            TextField(
+                value = selectedText,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier.menuAnchor()
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                typeBlood.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item) },
+                        onClick = {
+                            selectedText = item
+                            expanded = false
+
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun Drunk() {
+    val context = LocalContext.current
+    val typeBlood = arrayOf("", "Frecuente","Muy Frecuente", "Ocacional", "Muy Poco", "No")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(typeBlood[0]) }
+    val focusManager = LocalFocusManager.current
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    textsRegister(inputText = "Alcohol")
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            }
+        ) {
+            TextField(
+                value = selectedText,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier.menuAnchor(),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {focusManager.clearFocus()})
+
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                typeBlood.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item) },
+                        onClick = {
+                            selectedText = item
+                            expanded = false
+
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun Coffe() {
+
+    val context = LocalContext.current
+    val typeBlood = arrayOf("", "Frecuente","Muy Frecuente", "Ocacional", "Muy Poco", "No")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(typeBlood[0]) }
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    textsRegister(inputText = "Café")
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            }
+        ) {
+            TextField(
+                value = selectedText,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier.menuAnchor()
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                typeBlood.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item) },
+                        onClick = {
+                            selectedText = item
+                            expanded = false
+
+                        }
+                    )
+                }
+            }
+        }
+    }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - User Name
@@ -709,3 +1182,5 @@ fun ButtonRegister(modifier: Modifier, med: Boolean, navController: NavControlle
     }
 
 }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Combobox

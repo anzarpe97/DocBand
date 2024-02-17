@@ -1,6 +1,9 @@
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+
 package com.docband.docband.login.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,11 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,22 +35,20 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.docband.docband.R
 import com.docband.docband.ui.theme.montserratFamily
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextFieldDefaults
+import com.docband.docband.R
 import com.docband.docband.ui.theme.DocBandTheme
 
 
 
 @Composable
-fun LoginScreen(navRegistro : () -> Unit, navHome : () -> Unit) {
+fun LoginScreen(navRegistro : () -> Unit, navHome : () -> Unit, viewModel: LoginViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     Column(modifier = Modifier.fillMaxHeight()) {
 
         Column {
@@ -63,12 +62,13 @@ fun LoginScreen(navRegistro : () -> Unit, navHome : () -> Unit) {
 }
 
 @Composable
-fun Login(modifier: Modifier, navRegistro : () -> Unit, navHome : () -> Unit) {
+fun Login(modifier: Modifier, navRegistro : () -> Unit, navHome : () -> Unit, labelId : String = "Email") {
+
     DocBandTheme {
-        Column(modifier = Modifier) {
+
+        Column(modifier = Modifier.background(Color.White)) {
 
             HeaderImage()
-
 
             Column(
                 modifier = Modifier
@@ -124,7 +124,7 @@ fun Login(modifier: Modifier, navRegistro : () -> Unit, navHome : () -> Unit) {
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun UserField() {
 
@@ -146,7 +146,7 @@ fun UserField() {
             )
         },
         colors = TextFieldDefaults.textFieldColors(
-
+            containerColor = Color(0xFFF7F7F7),
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent
 
@@ -154,7 +154,7 @@ fun UserField() {
     )
 
 }
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun PasswordField() {
 
@@ -176,7 +176,7 @@ fun PasswordField() {
         textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
         shape = RoundedCornerShape(12.dp),
         colors = TextFieldDefaults.textFieldColors(
-
+            containerColor = Color(0xFFF7F7F7),
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
         ),
@@ -192,8 +192,6 @@ fun HeaderImage() {
         contentDescription = "Doctora Logo",
         modifier = Modifier.fillMaxWidth()
     )
-
-
 }
 
 @Composable
