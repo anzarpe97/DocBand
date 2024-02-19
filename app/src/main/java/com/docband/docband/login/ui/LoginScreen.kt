@@ -39,22 +39,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.docband.docband.ui.theme.montserratFamily
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.docband.docband.R
 import com.docband.docband.ui.theme.DocBandTheme
 
-
-
 @Composable
-fun LoginScreen(navRegistro : () -> Unit, navHome : () -> Unit, viewModel: LoginViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun LoginScreen(navRegistro : () -> Unit, navHome : () -> Unit, viewModel: LoginViewModel) {
     Column(modifier = Modifier.fillMaxHeight()) {
 
         Column {
 
 
-            Login(Modifier.align(Alignment.Start), navRegistro, navHome)
+            Login(Modifier.align(Alignment.Start), navRegistro, navHome,viewModel)
 
 
         }
@@ -62,9 +63,20 @@ fun LoginScreen(navRegistro : () -> Unit, navHome : () -> Unit, viewModel: Login
 }
 
 @Composable
-fun Login(modifier: Modifier, navRegistro : () -> Unit, navHome : () -> Unit, labelId : String = "Email") {
+fun Login(
+    modifier: Modifier,
+    navRegistro: () -> Unit,
+    navHome: () -> Unit,
+    viewModel: LoginViewModel
+) {
 
     DocBandTheme {
+
+        //ViewModel
+        val email : String by viewModel.email.observeAsState(initial = "")
+        val password : String by viewModel.password.observeAsState(initial = "")
+        val loginEnable : Boolean by viewModel.loginEnable.observeAsState(initial = false)
+
 
         Column(modifier = Modifier.background(Color.White)) {
 
@@ -91,8 +103,8 @@ fun Login(modifier: Modifier, navRegistro : () -> Unit, navHome : () -> Unit, la
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    MyTextInput("Usuario")
-                    UserField()
+                    MyTextInput("Usuario o Email")
+                    UserField(email) {viewModel.onLoginChanged(it, password)}
                 }
                 Spacer(modifier = Modifier.padding(10.dp))
                 Column(
@@ -101,7 +113,7 @@ fun Login(modifier: Modifier, navRegistro : () -> Unit, navHome : () -> Unit, la
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     MyTextInput("Contraseña")
-                    PasswordField()
+                    PasswordField(password) {viewModel.onLoginChanged(email, it)}
                 }
 
                 Row(
@@ -115,7 +127,7 @@ fun Login(modifier: Modifier, navRegistro : () -> Unit, navHome : () -> Unit, la
                 }
                 Spacer(modifier = Modifier.padding(15.dp))
 
-                ButtonLog(Modifier.align(Alignment.CenterHorizontally), navHome)
+                ButtonLog(Modifier.align(Alignment.CenterHorizontally), navHome, loginEnable) {viewModel.onLoginSelected()}
 
             }
 
@@ -126,13 +138,12 @@ fun Login(modifier: Modifier, navRegistro : () -> Unit, navHome : () -> Unit, la
 
 
 @Composable
-fun UserField() {
+fun UserField(email: String, onTextFieldChange: (String) -> Unit ) {
 
-    var emailUser  by remember { mutableStateOf ("") }
 
     TextField(
-        value = emailUser,
-        onValueChange = { emailUser = it },
+        value = email,
+        onValueChange = { onTextFieldChange (it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         singleLine = true,
         textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
@@ -156,15 +167,14 @@ fun UserField() {
 }
 
 @Composable
-fun PasswordField() {
-
-    var name by remember { mutableStateOf("") }
+fun PasswordField(password: String, onTextFieldChange: (String) -> Unit) {
 
     TextField(
-        value = name,
-        onValueChange = { name = it },
+        value = password,
+        onValueChange = {onTextFieldChange(it)},
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         singleLine = true,
+        visualTransformation = PasswordVisualTransformation(),
         leadingIcon = {
             Icon(
                 imageVector = Icons.Filled.Info,
@@ -238,17 +248,20 @@ fun ForgotPassword() {
 }
 
 @Composable
-fun ButtonLog(modifier: Modifier, navHome : () -> Unit) {
+fun ButtonLog(modifier: Modifier, navHome : () -> Unit, loginEnable : Boolean, onLoginSelected: () -> Unit) {
 
     Button(
-        onClick = {navHome()}, modifier
+        onClick = {
+            onLoginSelected()
+            navHome()
+                  }, modifier
             .width(250.dp)
-            .height(48.dp)
-    ) {
-
+            .height(48.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF05A1D4),
+                disabledContainerColor = Color(0xFFA3DAEC)
+            ),enabled = loginEnable) {
         Text(text = "Iniciar Sesión", color = MaterialTheme.colorScheme.inverseOnSurface)
-
-
     }
 
 }
