@@ -1,7 +1,11 @@
 plugins {
+    //pluggins required for the conexion with firebase
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    //pluggins required for the conexion with firebase
     id("com.google.gms.google-services")
+
+    id("org.jetbrains.kotlin.android")
+
 }
 
 android {
@@ -56,8 +60,13 @@ android {
 
 
 dependencies {
-    implementation("com.google.firebase:firebase-analytics")
+
+    //import the firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
+
+    //another implementation from the official firebase website
+    implementation("com.google.firebase:firebase-analytics")
+
     implementation ("com.google.firebase:firebase-auth-ktx")
     implementation ("com.google.firebase:firebase-firestore-ktx")
     //FireBase
