@@ -9,6 +9,7 @@ import com.docband.docband.HomeView.HomeView
 import com.docband.docband.InfoView.InfoView
 import com.docband.docband.login.ui.LoginScreen
 import com.docband.docband.login.ui.LoginViewModel
+import com.docband.docband.login.ui.NewUserModel
 import com.docband.docband.login.ui.NewUserR
 
 @Composable
@@ -29,7 +30,7 @@ fun NavigationHost(){
 
         composable(NewUserR.route){
 
-            NewUserR(NavControler)
+            NewUserR(NavControler,NewUserModel())
 
         }
 

@@ -1,4 +1,5 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
+@file:OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
     ExperimentalComposeUiApi::class
 )
 
@@ -56,6 +57,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -67,9 +69,16 @@ import java.time.Instant
 import java.time.ZoneId
 
 @Composable
-fun NewUserR(navController: NavController) {
+fun NewUserR(navController: NavController, viewModel: NewUserModel) {
 
     DocBandTheme {
+
+        //Atributos
+        val name: String by viewModel.name.observeAsState(initial = "")
+        val cedula: String by viewModel.cedula.observeAsState(initial = "")
+        val gender: String by viewModel.gender.observeAsState(initial = "")
+        val placeB: String by viewModel.placeB.observeAsState(initial = "")
+        val religion: String by viewModel.religion.observeAsState(initial = "")
 
         Column(modifier = Modifier.fillMaxSize()) {
 
@@ -104,13 +113,26 @@ fun NewUserR(navController: NavController) {
                 //Informacion
                 item {
 
-                    Column ( modifier = Modifier
-                        .fillMaxSize()
-                        .padding(start = 60.dp, end = 60.dp),
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(start = 60.dp, end = 60.dp),
                         verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.Start){
-
-                        InfomationContent()
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        // - - -  - - - - - - - - - - - - - - - - - - - - - - - - - - - Here
+                        Button(onClick = {
+                            viewModel.printValues(
+                                name,
+                                cedula,
+                                gender,
+                                placeB,
+                                religion
+                            )
+                        }) {
+                            Text(text = "Presionar")
+                        }
+                        InfomationContent(viewModel, name, cedula, gender, placeB, religion)
                     }
 
                 }
@@ -119,11 +141,13 @@ fun NewUserR(navController: NavController) {
 
                 item {
 
-                    Column ( modifier = Modifier
-                        .fillMaxSize()
-                        .padding(start = 60.dp, end = 60.dp),
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(start = 60.dp, end = 60.dp),
                         verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.Start){
+                        horizontalAlignment = Alignment.Start
+                    ) {
 
                         HabitsContent()
                     }
@@ -133,11 +157,13 @@ fun NewUserR(navController: NavController) {
                 //Cuenta Usuario
                 item {
 
-                    Column ( modifier = Modifier
-                        .fillMaxSize()
-                        .padding(start = 60.dp, end = 60.dp),
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(start = 60.dp, end = 60.dp),
                         verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.Start){
+                        horizontalAlignment = Alignment.Start
+                    ) {
 
                         Spacer(modifier = Modifier.padding(15.dp))
 
@@ -147,28 +173,29 @@ fun NewUserR(navController: NavController) {
                     }
 
 
-
                 }
 
                 // Boton Enviar
                 item {
 
-                    Column ( modifier = Modifier
-                        .fillMaxSize()
-                        .padding(start = 60.dp, end = 60.dp),
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(start = 60.dp, end = 60.dp),
                         verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.Start){
+                        horizontalAlignment = Alignment.Start
+                    ) {
 
                         Spacer(modifier = Modifier.padding(15.dp))
 
                         ButtonRegister(
                             modifier = Modifier.align(Alignment.CenterHorizontally),
                             MedCheck(),
-                            navController)
+                            navController
+                        )
 
                         Spacer(modifier = Modifier.padding(15.dp))
                     }
-
 
 
                 }
@@ -195,18 +222,25 @@ fun AccountContent() {
 }
 
 @Composable
-fun InfomationContent() {
+fun InfomationContent(
+    viewModel: NewUserModel,
+    name: String,
+    cedula: String,
+    gender: String,
+    placeB: String,
+    religion: String
+) {
 
     Spacer(modifier = Modifier.padding(10.dp))
 
     DividerContent(nameDivider = "Informacion Personal")
 
-    IUserName()
-    NumCedula()
-    Gender()
+    IUserName(name) { viewModel.onLoginChanged(it, cedula, gender, placeB, religion) }
+    NumCedula(cedula) { viewModel.onLoginChanged(name, it, gender, placeB, religion) }
+    Gender(gender) { viewModel.onLoginChanged(name, cedula, it, placeB, religion) }
     DateUser()
-    PlaceBrith()
-    Religion()
+    PlaceBrith(placeB) { viewModel.onLoginChanged(name, cedula, gender, it, religion) }
+    Religion(religion) { viewModel.onLoginChanged(name, cedula, gender, placeB, it) }
     Address()
     UsualAddress()
     PhoneNumber()
@@ -219,7 +253,7 @@ fun InfomationContent() {
 }
 
 @Composable
-fun HabitsContent(){
+fun HabitsContent() {
     Spacer(modifier = Modifier.padding(15.dp))
     DividerContent(nameDivider = "Habitos")
     Food()
@@ -230,7 +264,7 @@ fun HabitsContent(){
 
 //DIVIDER
 @Composable
-fun DividerContent(nameDivider : String) {
+fun DividerContent(nameDivider: String) {
 
     TextTitle(textTile = nameDivider)
 
@@ -284,9 +318,7 @@ fun TextTitle(textTile: String) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Information User
 
 @Composable
-fun IUserName() {
-
-    var iUserName by remember { mutableStateOf("") }
+fun IUserName(nameV: String, onTextFieldChange: (String) -> Unit) {
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -295,8 +327,8 @@ fun IUserName() {
     Spacer(modifier = Modifier.padding(5.dp))
 
     TextField(
-        value = iUserName,
-        onValueChange = { iUserName = it },
+        value = nameV,
+        onValueChange = { onTextFieldChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         singleLine = true,
         textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
@@ -316,9 +348,7 @@ fun IUserName() {
 }
 
 @Composable
-fun NumCedula() {
-
-    var cedula by remember { mutableStateOf("") }
+fun NumCedula(cedulaV: String, onTextFieldChange: (String) -> Unit) {
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -327,9 +357,9 @@ fun NumCedula() {
     Spacer(modifier = Modifier.padding(5.dp))
 
     TextField(
-        value = cedula,
-        onValueChange = { cedula = it },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+        value = cedulaV,
+        onValueChange = { onTextFieldChange(it) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         singleLine = true,
         textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
         maxLines = 1,
@@ -393,6 +423,10 @@ fun DateUser() {
     date?.let {
 
         val localDate = Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC")).toLocalDate()
+
+        val p: String =
+            localDate.dayOfMonth.toString() + localDate.monthValue.toString() + localDate.year.toString()
+
         Spacer(modifier = Modifier.padding(5.dp))
         Text(
             text = "Fecha de Nacimiento: ${localDate.dayOfMonth}/${localDate.monthValue}/${localDate.year}",
@@ -408,9 +442,7 @@ fun DateUser() {
 }
 
 @Composable
-fun PlaceBrith (){
-
-    var placeBirth by remember { mutableStateOf("") }
+fun PlaceBrith(placeB: String, onTextFieldChange: (String) -> Unit) {
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -419,8 +451,8 @@ fun PlaceBrith (){
     Spacer(modifier = Modifier.padding(5.dp))
 
     TextField(
-        value = placeBirth,
-        onValueChange = { placeBirth = it },
+        value = placeB,
+        onValueChange = { onTextFieldChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         singleLine = true,
         textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
@@ -440,7 +472,7 @@ fun PlaceBrith (){
 }
 
 @Composable
-fun Address (){
+fun Address() {
 
     var adress by remember { mutableStateOf("") }
 
@@ -473,7 +505,7 @@ fun Address (){
 }
 
 @Composable
-fun UsualAddress(){
+fun UsualAddress() {
 
     var usualAdress by remember { mutableStateOf("") }
 
@@ -505,7 +537,7 @@ fun UsualAddress(){
 }
 
 @Composable
-fun PhoneNumber (){
+fun PhoneNumber() {
 
     var phoneNumber by remember { mutableStateOf("") }
 
@@ -537,7 +569,7 @@ fun PhoneNumber (){
 }
 
 @Composable
-fun FPhoneNumber (){
+fun FPhoneNumber() {
 
     var fPhoneNumber by remember { mutableStateOf("") }
 
@@ -569,7 +601,7 @@ fun FPhoneNumber (){
 }
 
 @Composable
-fun Occupation(){
+fun Occupation() {
 
     var occupation by remember { mutableStateOf("") }
 
@@ -601,11 +633,11 @@ fun Occupation(){
 }
 
 @Composable
-fun Gender() {
+fun Gender(generV: String, onTextFieldChange: (String) -> Unit) {
     val context = LocalContext.current
     val gener = arrayOf("Masculino", "Femenino", "Otro")
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(gener[0]) }
+    var generV by remember { mutableStateOf(gener[0]) }
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -624,7 +656,7 @@ fun Gender() {
             }
         ) {
             TextField(
-                value = selectedText,
+                value = generV,
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -639,8 +671,9 @@ fun Gender() {
                     DropdownMenuItem(
                         text = { Text(text = item) },
                         onClick = {
-                            selectedText = item
+                            generV = item
                             expanded = false
+                            onTextFieldChange(item)
 
                         }
                     )
@@ -654,11 +687,11 @@ fun Gender() {
 }
 
 @Composable
-fun Religion() {
+fun Religion(religionB: String, onTextFieldChange: (String) -> Unit) {
     val context = LocalContext.current
     val religion = arrayOf("", "Cristiana", "Catolica", "Testigos de Jehova", "Ninguna")
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(religion[0]) }
+    var religionB by remember { mutableStateOf(religion[0]) }
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -677,7 +710,7 @@ fun Religion() {
             }
         ) {
             TextField(
-                value = selectedText,
+                value = religionB,
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -692,8 +725,9 @@ fun Religion() {
                     DropdownMenuItem(
                         text = { Text(text = item) },
                         onClick = {
-                            selectedText = item
+                            religionB = item
                             expanded = false
+                            onTextFieldChange(item)
 
                         }
                     )
@@ -701,6 +735,7 @@ fun Religion() {
             }
         }
     }
+
 }
 
 @Composable
@@ -753,10 +788,11 @@ fun Etnia() {
     }
     Spacer(modifier = Modifier.padding(5.dp))
 }
+
 @Composable
 fun TypeBlood() {
     val context = LocalContext.current
-    val typeBlood = arrayOf("", "A+", "A-","B+","B-","AB+","AB-", "AB-", "O+", "O-")
+    val typeBlood = arrayOf("", "A+", "A-", "B+", "B-", "AB+", "AB-", "AB-", "O+", "O-")
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(typeBlood[0]) }
 
@@ -858,7 +894,7 @@ fun Food() {
 @Composable
 fun Smoke() {
     val context = LocalContext.current
-    val typeBlood = arrayOf("", "Frecuente","Muy Frecuente", "Ocacional", "Muy Poco", "No")
+    val typeBlood = arrayOf("", "Frecuente", "Muy Frecuente", "Ocacional", "Muy Poco", "No")
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(typeBlood[0]) }
 
@@ -908,7 +944,7 @@ fun Smoke() {
 @Composable
 fun Drunk() {
     val context = LocalContext.current
-    val typeBlood = arrayOf("", "Frecuente","Muy Frecuente", "Ocacional", "Muy Poco", "No")
+    val typeBlood = arrayOf("", "Frecuente", "Muy Frecuente", "Ocacional", "Muy Poco", "No")
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(typeBlood[0]) }
     val focusManager = LocalFocusManager.current
@@ -936,7 +972,7 @@ fun Drunk() {
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier.menuAnchor(),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {focusManager.clearFocus()})
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
 
             )
 
@@ -963,7 +999,7 @@ fun Drunk() {
 fun Coffe() {
 
     val context = LocalContext.current
-    val typeBlood = arrayOf("", "Frecuente","Muy Frecuente", "Ocacional", "Muy Poco", "No")
+    val typeBlood = arrayOf("", "Frecuente", "Muy Frecuente", "Ocacional", "Muy Poco", "No")
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(typeBlood[0]) }
 
@@ -1197,7 +1233,7 @@ fun EditableExposedDropdownMenuSample() {
     var selectOptionText by remember { mutableStateOf(options[0]) }
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    Box(modifier = Modifier.fillMaxSize()){
+    Box(modifier = Modifier.fillMaxSize()) {
     }
 
     ExposedDropdownMenuBox(
@@ -1210,24 +1246,26 @@ fun EditableExposedDropdownMenuSample() {
             readOnly = false,
             value = selectOptionText,
             onValueChange = {},
-            label = { Text(text = "Category")},
-            trailingIcon = {ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)},
+            label = { Text(text = "Category") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
         )//OutlinedTextField
 
         ExposedDropdownMenu(
 
             expanded = expanded,
-            onDismissRequest = {expanded = false }) {
+            onDismissRequest = { expanded = false }) {
 
-            options.forEach{selectOption ->
+            options.forEach { selectOption ->
 
                 DropdownMenuItem(
-                    text = {Text(text = selectOption)},
+                    text = { Text(text = selectOption) },
                     onClick = {
                         selectOptionText = selectOption
-                        expanded = false},
-                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding )
+                        expanded = false
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                )
             }
 
         }//ExposedDropdownMenu
