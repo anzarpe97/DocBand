@@ -1,4 +1,6 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
+    ExperimentalComposeUiApi::class
+)
 
 package com.docband.docband.login.ui
 
@@ -51,6 +53,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -211,6 +214,7 @@ fun InfomationContent() {
     Occupation()
     Etnia()
     TypeBlood()
+    EditableExposedDropdownMenuSample()
 
 }
 
@@ -1184,3 +1188,50 @@ fun ButtonRegister(modifier: Modifier, med: Boolean, navController: NavControlle
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Combobox
+@Composable
+fun EditableExposedDropdownMenuSample() {
+
+    // MenuOptions
+    val options = listOf("General", "Birthday", "Anniversary", "Meeting", "Call", "Shopping")
+    var expanded by remember { mutableStateOf(false) }
+    var selectOptionText by remember { mutableStateOf(options[0]) }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    Box(modifier = Modifier.fillMaxSize()){
+    }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded }) {
+
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor()
+                .,
+            readOnly = false,
+            value = selectOptionText,
+            onValueChange = {},
+            label = { Text(text = "Category")},
+            trailingIcon = {ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)},
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
+        )//OutlinedTextField
+
+        ExposedDropdownMenu(
+
+            expanded = expanded,
+            onDismissRequest = {expanded = false }) {
+
+            options.forEach{selectOption ->
+
+                DropdownMenuItem(
+                    text = {Text(text = selectOption)},
+                    onClick = {
+                        selectOptionText = selectOption
+                        expanded = false},
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding )
+            }
+
+        }//ExposedDropdownMenu
+    }//ExposedDropdownMenuBox
+}//EditableExposedDropdownMenuSample
