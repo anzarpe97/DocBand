@@ -1203,12 +1203,10 @@ fun EditableExposedDropdownMenuSample() {
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded }) {
-
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor()
-                .,
+                .menuAnchor(),
             readOnly = false,
             value = selectOptionText,
             onValueChange = {},
