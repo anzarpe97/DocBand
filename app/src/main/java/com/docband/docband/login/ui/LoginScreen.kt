@@ -24,9 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -127,7 +124,7 @@ fun Login(
                 }
                 Spacer(modifier = Modifier.padding(15.dp))
 
-                ButtonLog(Modifier.align(Alignment.CenterHorizontally), navHome, loginEnable) {viewModel.onLoginSelected()}
+                ButtonLog(Modifier.align(Alignment.CenterHorizontally), navHome, loginEnable, viewModel, email, password)
 
             }
 
@@ -248,12 +245,18 @@ fun ForgotPassword() {
 }
 
 @Composable
-fun ButtonLog(modifier: Modifier, navHome : () -> Unit, loginEnable : Boolean, onLoginSelected: () -> Unit) {
+fun ButtonLog(
+    modifier: Modifier,
+    navHome: () -> Unit,
+    loginEnable: Boolean,
+    viewModel: LoginViewModel,
+    email: String,
+    password: String
+) {
 
     Button(
         onClick = {
-            onLoginSelected()
-            navHome()
+            viewModel.singInWithEmailAndPassword(email,password,navHome)
                   }, modifier
             .width(250.dp)
             .height(48.dp),

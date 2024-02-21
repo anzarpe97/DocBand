@@ -66,7 +66,7 @@ dependencies {
 
     //another implementation from the official firebase website
     implementation("com.google.firebase:firebase-analytics")
-
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1")
     implementation ("com.google.firebase:firebase-auth-ktx")
     implementation ("com.google.firebase:firebase-firestore-ktx")
     //FireBase
@@ -91,4 +91,8 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1")
+
+
 }

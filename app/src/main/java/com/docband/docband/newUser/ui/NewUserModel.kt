@@ -90,7 +90,6 @@ class NewUserModel {
         occupation: String,
         etnia: String,
         typeBlood: String,
-
     ) {
 
         _name.value = name
@@ -174,9 +173,6 @@ class NewUserModel {
         Log.d("Registro", "emailUser: $emailUser")
         Log.d("Registro", "passwordNewUser: $passwordNewUser")
         Log.d("Registro", "rPasswordNewUser: $rPasswordNewUser")
-
-
-
 
     }
 

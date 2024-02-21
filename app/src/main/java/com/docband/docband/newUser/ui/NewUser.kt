@@ -1521,7 +1521,6 @@ fun EditableExposedDropdownMenuSample() {
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                 )
             }
-
         }//ExposedDropdownMenu
     }//ExposedDropdownMenuBox
 }//EditableExposedDropdownMenuSample
