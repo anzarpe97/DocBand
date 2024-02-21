@@ -8,6 +8,8 @@ import com.docband.docband.Destinations.*
 import com.docband.docband.HomeView.HomeView
 import com.docband.docband.InfoView.InfoView
 import com.docband.docband.login.ui.LoginScreen
+import com.docband.docband.login.ui.LoginViewModel
+import com.docband.docband.login.ui.NewUserModel
 import com.docband.docband.login.ui.NewUserR
 
 @Composable
@@ -19,12 +21,16 @@ fun NavigationHost(){
 
         composable(LoginScreen.route){
 
-            LoginScreen(navRegistro = { NavControler.navigate(NewUserR.route) }, navHome = { NavControler.navigate(HomeView.route) })
+            LoginScreen(
+                navRegistro = { NavControler.navigate(NewUserR.route) },
+                navHome = { NavControler.navigate(HomeView.route) },
+                LoginViewModel()
+            )
         }
 
         composable(NewUserR.route){
 
-            NewUserR(NavControler)
+            NewUserR(NavControler,NewUserModel())
 
         }
 

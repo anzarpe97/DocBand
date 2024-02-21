@@ -1,6 +1,9 @@
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+
 package com.docband.docband.login.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,11 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,9 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,28 +32,27 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.docband.docband.R
 import com.docband.docband.ui.theme.montserratFamily
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import com.docband.docband.R
 import com.docband.docband.ui.theme.DocBandTheme
 
-
-
 @Composable
-fun LoginScreen(navRegistro : () -> Unit, navHome : () -> Unit) {
+fun LoginScreen(navRegistro : () -> Unit, navHome : () -> Unit, viewModel: LoginViewModel) {
     Column(modifier = Modifier.fillMaxHeight()) {
 
         Column {
 
 
-            Login(Modifier.align(Alignment.Start), navRegistro, navHome)
+            Login(Modifier.align(Alignment.Start), navRegistro, navHome,viewModel)
 
 
         }
@@ -63,12 +60,24 @@ fun LoginScreen(navRegistro : () -> Unit, navHome : () -> Unit) {
 }
 
 @Composable
-fun Login(modifier: Modifier, navRegistro : () -> Unit, navHome : () -> Unit) {
+fun Login(
+    modifier: Modifier,
+    navRegistro: () -> Unit,
+    navHome: () -> Unit,
+    viewModel: LoginViewModel
+) {
+
     DocBandTheme {
-        Column(modifier = Modifier) {
+
+        //ViewModel
+        val email : String by viewModel.email.observeAsState(initial = "")
+        val password : String by viewModel.password.observeAsState(initial = "")
+        val loginEnable : Boolean by viewModel.loginEnable.observeAsState(initial = false)
+
+
+        Column(modifier = Modifier.background(Color.White)) {
 
             HeaderImage()
-
 
             Column(
                 modifier = Modifier
@@ -91,8 +100,8 @@ fun Login(modifier: Modifier, navRegistro : () -> Unit, navHome : () -> Unit) {
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    MyTextInput("Usuario")
-                    UserField()
+                    MyTextInput("Usuario o Email")
+                    UserField(email) {viewModel.onLoginChanged(it, password)}
                 }
                 Spacer(modifier = Modifier.padding(10.dp))
                 Column(
@@ -101,7 +110,7 @@ fun Login(modifier: Modifier, navRegistro : () -> Unit, navHome : () -> Unit) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     MyTextInput("Contraseña")
-                    PasswordField()
+                    PasswordField(password) {viewModel.onLoginChanged(email, it)}
                 }
 
                 Row(
@@ -115,7 +124,7 @@ fun Login(modifier: Modifier, navRegistro : () -> Unit, navHome : () -> Unit) {
                 }
                 Spacer(modifier = Modifier.padding(15.dp))
 
-                ButtonLog(Modifier.align(Alignment.CenterHorizontally), navHome)
+                ButtonLog(Modifier.align(Alignment.CenterHorizontally), navHome, loginEnable, viewModel, email, password)
 
             }
 
@@ -124,15 +133,14 @@ fun Login(modifier: Modifier, navRegistro : () -> Unit, navHome : () -> Unit) {
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun UserField() {
 
-    var emailUser  by remember { mutableStateOf ("") }
+@Composable
+fun UserField(email: String, onTextFieldChange: (String) -> Unit ) {
+
 
     TextField(
-        value = emailUser,
-        onValueChange = { emailUser = it },
+        value = email,
+        onValueChange = { onTextFieldChange (it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         singleLine = true,
         textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
@@ -146,7 +154,7 @@ fun UserField() {
             )
         },
         colors = TextFieldDefaults.textFieldColors(
-
+            containerColor = Color(0xFFF7F7F7),
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent
 
@@ -154,17 +162,16 @@ fun UserField() {
     )
 
 }
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun PasswordField() {
 
-    var name by remember { mutableStateOf("") }
+@Composable
+fun PasswordField(password: String, onTextFieldChange: (String) -> Unit) {
 
     TextField(
-        value = name,
-        onValueChange = { name = it },
+        value = password,
+        onValueChange = {onTextFieldChange(it)},
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         singleLine = true,
+        visualTransformation = PasswordVisualTransformation(),
         leadingIcon = {
             Icon(
                 imageVector = Icons.Filled.Info,
@@ -176,7 +183,7 @@ fun PasswordField() {
         textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
         shape = RoundedCornerShape(12.dp),
         colors = TextFieldDefaults.textFieldColors(
-
+            containerColor = Color(0xFFF7F7F7),
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
         ),
@@ -192,8 +199,6 @@ fun HeaderImage() {
         contentDescription = "Doctora Logo",
         modifier = Modifier.fillMaxWidth()
     )
-
-
 }
 
 @Composable
@@ -240,17 +245,26 @@ fun ForgotPassword() {
 }
 
 @Composable
-fun ButtonLog(modifier: Modifier, navHome : () -> Unit) {
+fun ButtonLog(
+    modifier: Modifier,
+    navHome: () -> Unit,
+    loginEnable: Boolean,
+    viewModel: LoginViewModel,
+    email: String,
+    password: String
+) {
 
     Button(
-        onClick = {navHome()}, modifier
+        onClick = {
+            viewModel.singInWithEmailAndPassword(email,password,navHome)
+                  }, modifier
             .width(250.dp)
-            .height(48.dp)
-    ) {
-
+            .height(48.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF05A1D4),
+                disabledContainerColor = Color(0xFFA3DAEC)
+            ),enabled = loginEnable) {
         Text(text = "Iniciar Sesión", color = MaterialTheme.colorScheme.inverseOnSurface)
-
-
     }
 
 }

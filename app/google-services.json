@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "98469660731",
+    "project_id": "docbanddatabase",
+    "storage_bucket": "docbanddatabase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:98469660731:android:f3c89c43a4d848f62ff41e",
+        "android_client_info": {
+          "package_name": "com.docband.docband"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoNu9W11KjKIiLKKYfVjpNahEmmCiQF68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

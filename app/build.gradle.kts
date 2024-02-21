@@ -1,6 +1,11 @@
 plugins {
+    //pluggins required for the conexion with firebase
     id("com.android.application")
+    //pluggins required for the conexion with firebase
+    id("com.google.gms.google-services")
+
     id("org.jetbrains.kotlin.android")
+
 }
 
 android {
@@ -56,6 +61,16 @@ android {
 
 dependencies {
 
+    //import the firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
+
+    //another implementation from the official firebase website
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1")
+    implementation ("com.google.firebase:firebase-auth-ktx")
+    implementation ("com.google.firebase:firebase-firestore-ktx")
+    //FireBase
+
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4")
     val navVersion = "2.4.0-alpha05"
     implementation ("androidx.navigation:navigation-compose:$navVersion")
@@ -76,4 +91,8 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1")
+
+
 }
