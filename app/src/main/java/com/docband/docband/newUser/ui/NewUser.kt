@@ -79,6 +79,15 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
         val gender: String by viewModel.gender.observeAsState(initial = "")
         val placeB: String by viewModel.placeB.observeAsState(initial = "")
         val religion: String by viewModel.religion.observeAsState(initial = "")
+        val address: String by viewModel.address.observeAsState(initial = "")
+        val usualAddress: String by viewModel.usualAddress.observeAsState(initial = "")
+        val phoneNumber: String by viewModel.phoneNumber.observeAsState(initial = "")
+        val fPhoneNumber: String by viewModel.fPhoneNumber.observeAsState(initial = "")
+        val occupation: String by viewModel.occupation.observeAsState(initial = "")
+        val etnia: String by viewModel.etnia.observeAsState(initial = "")
+        val typeBlood: String by viewModel.typeBlood.observeAsState(initial = "")
+        val food: String by viewModel.food.observeAsState(initial = "")
+
 
         Column(modifier = Modifier.fillMaxSize()) {
 
@@ -127,12 +136,37 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
                                 cedula,
                                 gender,
                                 placeB,
-                                religion
-                            )
+                                religion,
+                                address,
+                                usualAddress,
+                                phoneNumber,
+                                fPhoneNumber,
+                                occupation,
+                                etnia,
+                                typeBlood,
+                                food,
+
+                                )
                         }) {
                             Text(text = "Presionar")
                         }
-                        InfomationContent(viewModel, name, cedula, gender, placeB, religion)
+                        InfomationContent(
+                            viewModel,
+                            name,
+                            cedula,
+                            gender,
+                            placeB,
+                            religion,
+                            address,
+                            usualAddress,
+                            phoneNumber,
+                            fPhoneNumber,
+                            occupation,
+                            etnia,
+                            typeBlood,
+
+
+                            )
                     }
 
                 }
@@ -149,7 +183,7 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
                         horizontalAlignment = Alignment.Start
                     ) {
 
-                        HabitsContent()
+                        HabitsContent(viewModel, food)
                     }
 
                 }
@@ -228,35 +262,233 @@ fun InfomationContent(
     cedula: String,
     gender: String,
     placeB: String,
-    religion: String
+    religion: String,
+    address: String,
+    usualAddress: String,
+    phoneNumber: String,
+    fPhoneNumber: String,
+    occupation: String,
+    etnia: String,
+    typeBlood: String,
 ) {
 
     Spacer(modifier = Modifier.padding(10.dp))
 
     DividerContent(nameDivider = "Informacion Personal")
 
-    IUserName(name) { viewModel.onLoginChanged(it, cedula, gender, placeB, religion) }
-    NumCedula(cedula) { viewModel.onLoginChanged(name, it, gender, placeB, religion) }
-    Gender(gender) { viewModel.onLoginChanged(name, cedula, it, placeB, religion) }
+    IUserName(name) {
+        viewModel.onLoginChanged(
+            it,
+            cedula,
+            gender,
+            placeB,
+            religion,
+            address,
+            usualAddress,
+            phoneNumber,
+            fPhoneNumber,
+            occupation,
+            etnia,
+            typeBlood,
+        )
+    }
+    NumCedula(cedula) {
+        viewModel.onLoginChanged(
+            name,
+            it,
+            gender,
+            placeB,
+            religion,
+            address,
+            usualAddress,
+            phoneNumber,
+            fPhoneNumber,
+            occupation,
+            etnia,
+            typeBlood,
+        )
+    }
+    Gender(gender) {
+        viewModel.onLoginChanged(
+            name,
+            cedula,
+            it,
+            placeB,
+            religion,
+            address,
+            usualAddress,
+            phoneNumber,
+            fPhoneNumber,
+            occupation,
+            etnia,
+            typeBlood,
+        )
+    }
     DateUser()
-    PlaceBrith(placeB) { viewModel.onLoginChanged(name, cedula, gender, it, religion) }
-    Religion(religion) { viewModel.onLoginChanged(name, cedula, gender, placeB, it) }
-    Address()
-    UsualAddress()
-    PhoneNumber()
-    FPhoneNumber()
-    Occupation()
-    Etnia()
-    TypeBlood()
-    EditableExposedDropdownMenuSample()
+    PlaceBrith(placeB) {
+        viewModel.onLoginChanged(
+            name,
+            cedula,
+            gender,
+            it,
+            religion,
+            address,
+            usualAddress,
+            phoneNumber,
+            fPhoneNumber,
+            occupation,
+            etnia,
+            typeBlood,
+        )
+    }
+    Religion(religion) {
+        viewModel.onLoginChanged(
+            name,
+            cedula,
+            gender,
+            placeB,
+            it,
+            address,
+            usualAddress,
+            phoneNumber,
+            fPhoneNumber,
+            occupation,
+            etnia,
+            typeBlood,
+        )
+    }
+    Address(address) {
+        viewModel.onLoginChanged(
+            name,
+            cedula,
+            gender,
+            placeB,
+            religion,
+            it,
+            usualAddress,
+            phoneNumber,
+            fPhoneNumber,
+            occupation,
+            etnia,
+            typeBlood,
+        )
+    }
+    UsualAddress(usualAddress) {
+        viewModel.onLoginChanged(
+            name,
+            cedula,
+            gender,
+            placeB,
+            religion,
+            address,
+            it,
+            phoneNumber,
+            fPhoneNumber,
+            occupation,
+            etnia,
+            typeBlood,
+        )
+    }
+    PhoneNumber(phoneNumber) {
+        viewModel.onLoginChanged(
+            name,
+            cedula,
+            gender,
+            placeB,
+            religion,
+            address,
+            usualAddress,
+            it,
+            fPhoneNumber,
+            occupation,
+            etnia,
+            typeBlood,
+        )
+    }
+    FPhoneNumber(fPhoneNumber) {
+        viewModel.onLoginChanged(
+            name,
+            cedula,
+            gender,
+            placeB,
+            religion,
+            address,
+            usualAddress,
+            phoneNumber,
+            it,
+            occupation,
+            etnia,
+            typeBlood
+        )
+    }
+    Occupation(occupation) {
+        viewModel.onLoginChanged(
+            name,
+            cedula,
+            gender,
+            placeB,
+            religion,
+            address,
+            usualAddress,
+            phoneNumber,
+            fPhoneNumber,
+            it,
+            etnia,
+            typeBlood
+        )
+    }
+    Etnia(etnia) {
+        viewModel.onLoginChanged(
+            name,
+            cedula,
+            gender,
+            placeB,
+            religion,
+            address,
+            usualAddress,
+            phoneNumber,
+            fPhoneNumber,
+            occupation,
+            it,
+            typeBlood
+        )
+    }
+    TypeBlood(typeBlood) {
+        viewModel.onLoginChanged(
+            name,
+            cedula,
+            gender,
+            placeB,
+            religion,
+            address,
+            usualAddress,
+            phoneNumber,
+            fPhoneNumber,
+            occupation,
+            etnia,
+            it
+        )
+    }
+
 
 }
 
 @Composable
-fun HabitsContent() {
+fun HabitsContent(
+    viewModel: NewUserModel,
+    food: String,
+
+    ) {
+
     Spacer(modifier = Modifier.padding(15.dp))
+
     DividerContent(nameDivider = "Habitos")
-    Food()
+    Food(food) {
+        viewModel.onLoginChangedHabits(
+            it
+        )
+    }
+
     Drunk()
     Smoke()
     Coffe()
@@ -472,9 +704,8 @@ fun PlaceBrith(placeB: String, onTextFieldChange: (String) -> Unit) {
 }
 
 @Composable
-fun Address() {
+fun Address(address: String, onTextFieldChange: (String) -> Unit) {
 
-    var adress by remember { mutableStateOf("") }
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -483,8 +714,8 @@ fun Address() {
     Spacer(modifier = Modifier.padding(5.dp))
 
     TextField(
-        value = adress,
-        onValueChange = { adress = it },
+        value = address,
+        onValueChange = { onTextFieldChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         singleLine = true,
         textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
@@ -505,9 +736,8 @@ fun Address() {
 }
 
 @Composable
-fun UsualAddress() {
+fun UsualAddress(usualAddress: String, onTextFieldChange: (String) -> Unit) {
 
-    var usualAdress by remember { mutableStateOf("") }
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -516,8 +746,8 @@ fun UsualAddress() {
     Spacer(modifier = Modifier.padding(5.dp))
 
     TextField(
-        value = usualAdress,
-        onValueChange = { usualAdress = it },
+        value = usualAddress,
+        onValueChange = { onTextFieldChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         singleLine = true,
         textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
@@ -537,9 +767,8 @@ fun UsualAddress() {
 }
 
 @Composable
-fun PhoneNumber() {
+fun PhoneNumber(phoneNumber: String, onTextFieldChange: (String) -> Unit) {
 
-    var phoneNumber by remember { mutableStateOf("") }
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -549,7 +778,7 @@ fun PhoneNumber() {
 
     TextField(
         value = phoneNumber,
-        onValueChange = { phoneNumber = it },
+        onValueChange = { onTextFieldChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         singleLine = true,
         textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
@@ -569,9 +798,8 @@ fun PhoneNumber() {
 }
 
 @Composable
-fun FPhoneNumber() {
+fun FPhoneNumber(fPhoneNumber: String, onTextFieldChange: (String) -> Unit) {
 
-    var fPhoneNumber by remember { mutableStateOf("") }
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -581,7 +809,7 @@ fun FPhoneNumber() {
 
     TextField(
         value = fPhoneNumber,
-        onValueChange = { fPhoneNumber = it },
+        onValueChange = { onTextFieldChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         singleLine = true,
         textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
@@ -601,9 +829,8 @@ fun FPhoneNumber() {
 }
 
 @Composable
-fun Occupation() {
+fun Occupation(occupation: String, onTextFieldChange: (String) -> Unit) {
 
-    var occupation by remember { mutableStateOf("") }
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -613,7 +840,7 @@ fun Occupation() {
 
     TextField(
         value = occupation,
-        onValueChange = { occupation = it },
+        onValueChange = { onTextFieldChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         singleLine = true,
         textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
@@ -634,8 +861,8 @@ fun Occupation() {
 
 @Composable
 fun Gender(generV: String, onTextFieldChange: (String) -> Unit) {
-    val context = LocalContext.current
-    val gener = arrayOf("Masculino", "Femenino", "Otro")
+
+    val gener = arrayOf("", "Masculino", "Femenino", "Otro")
     var expanded by remember { mutableStateOf(false) }
     var generV by remember { mutableStateOf(gener[0]) }
 
@@ -739,11 +966,11 @@ fun Religion(religionB: String, onTextFieldChange: (String) -> Unit) {
 }
 
 @Composable
-fun Etnia() {
-    val context = LocalContext.current
+fun Etnia(etniaV: String, onTextFieldChange: (String) -> Unit) {
+
     val etnia = arrayOf("", "Si", "No")
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(etnia[0]) }
+    var etniaV by remember { mutableStateOf(etnia[0]) }
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -762,7 +989,7 @@ fun Etnia() {
             }
         ) {
             TextField(
-                value = selectedText,
+                value = etniaV,
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -777,8 +1004,9 @@ fun Etnia() {
                     DropdownMenuItem(
                         text = { Text(text = item) },
                         onClick = {
-                            selectedText = item
+                            etniaV = item
                             expanded = false
+                            onTextFieldChange(item)
 
                         }
                     )
@@ -790,11 +1018,11 @@ fun Etnia() {
 }
 
 @Composable
-fun TypeBlood() {
-    val context = LocalContext.current
+fun TypeBlood(typeBloodV: String, onTextFieldChange: (String) -> Unit) {
+
     val typeBlood = arrayOf("", "A+", "A-", "B+", "B-", "AB+", "AB-", "AB-", "O+", "O-")
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(typeBlood[0]) }
+    var typeBloodV by remember { mutableStateOf(typeBlood[0]) }
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -813,7 +1041,7 @@ fun TypeBlood() {
             }
         ) {
             TextField(
-                value = selectedText,
+                value = typeBloodV,
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -828,8 +1056,9 @@ fun TypeBlood() {
                     DropdownMenuItem(
                         text = { Text(text = item) },
                         onClick = {
-                            selectedText = item
+                            typeBloodV = item
                             expanded = false
+                            onTextFieldChange(item)
 
                         }
                     )
@@ -842,11 +1071,10 @@ fun TypeBlood() {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Habits
 
 @Composable
-fun Food() {
-    val context = LocalContext.current
-    val typeBlood = arrayOf("", "Balanceada", "No Balanceada")
+fun Food(foodV: String, onTextFieldChange: (String) -> Unit) {
+    val food = arrayOf("", "Balanceada", "No Balanceada")
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(typeBlood[0]) }
+    var foodV by remember { mutableStateOf(food[0]) }
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -865,7 +1093,7 @@ fun Food() {
             }
         ) {
             TextField(
-                value = selectedText,
+                value = foodV,
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -876,12 +1104,14 @@ fun Food() {
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                typeBlood.forEach { item ->
+                food.forEach { item ->
                     DropdownMenuItem(
                         text = { Text(text = item) },
                         onClick = {
-                            selectedText = item
+                            foodV = item
                             expanded = false
+                            onTextFieldChange(item)
+
 
                         }
                     )

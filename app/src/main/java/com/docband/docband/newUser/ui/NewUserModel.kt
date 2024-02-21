@@ -26,8 +26,8 @@ class NewUserModel {
     private val _religion = MutableLiveData<String>()
     val religion: LiveData<String> = _religion
 
-    private val _adress = MutableLiveData<String>()
-    val adress: LiveData<String> = _adress
+    private val _address = MutableLiveData<String>()
+    val address: LiveData<String> = _address
 
     private val _usualAddress = MutableLiveData<String>()
     val usualAddress: LiveData<String> = _usualAddress
@@ -44,28 +44,83 @@ class NewUserModel {
     private val _occupation = MutableLiveData<String>()
     val occupation: LiveData<String> = _occupation
 
+    private val _etnia = MutableLiveData<String>()
+    val etnia: LiveData<String> = _etnia
+
     private val _typeBlood = MutableLiveData<String>()
     val typeBlood: LiveData<String> = _typeBlood
 
+    private val _food = MutableLiveData<String>()
+    val food: LiveData<String> = _food
+
     //Capturar Valores
-    fun onLoginChanged(name: String, cedula: String, gender: String, placeB: String, religion : String) {
+    fun onLoginChanged(
+        name: String,
+        cedula: String,
+        gender: String,
+        placeB: String,
+        religion: String,
+        address: String,
+        usualAddress: String,
+        phoneNumber: String,
+        fPhoneNumber: String,
+        occupation: String,
+        etnia: String,
+        typeBlood: String,
+
+    ) {
 
         _name.value = name
         _cedula.value = cedula
         _gender.value = gender
         _placeB.value = placeB
         _religion.value = religion
+        _address.value = address
+        _usualAddress.value = usualAddress
+        _phoneNumber.value = phoneNumber
+        _fPhoneNumber.value = fPhoneNumber
+        _occupation.value = occupation
+        _etnia.value = etnia
+        _typeBlood.value = typeBlood
 
     }
 
+    fun onLoginChangedHabits(
+        food: String
+    ) {
 
-    fun printValues(name: String, cedula: String, gender: String, placeB: String, religion : String) {
+           _food.value = food
+    }
+
+    fun printValues(
+        name: String,
+        cedula: String,
+        gender: String,
+        placeB: String,
+        religion: String,
+        address: String,
+        usualAddress: String,
+        phoneNumber: String,
+        fPhoneNumber: String,
+        occupation: String,
+        etnia: String,
+        typeBlood: String,
+        food: String,
+    ) {
 
         Log.d("Registro", "Nombre: $name")
         Log.d("Registro", "cedula: $cedula")
         Log.d("Registro", "Genero: $gender")
         Log.d("Registro", "Lugar de Nacimiento: $placeB")
         Log.d("Registro", "Religion: $religion")
+        Log.d("Registro", "Address: $address")
+        Log.d("Registro", "usualAddress: $usualAddress")
+        Log.d("Registro", "phoneNumber: $phoneNumber")
+        Log.d("Registro", "fPhoneNumber: $fPhoneNumber")
+        Log.d("Registro", "occupation: $occupation")
+        Log.d("Registro", "etnia: $etnia")
+        Log.d("Registro", "typeBlood: $typeBlood")
+        Log.d("Registro", "food: $food")
 
 
     }
