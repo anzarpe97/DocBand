@@ -53,6 +53,29 @@ class NewUserModel {
     private val _food = MutableLiveData<String>()
     val food: LiveData<String> = _food
 
+    private val _drunk = MutableLiveData<String>()
+    val drunk: LiveData<String> = _drunk
+
+    private val _smoke = MutableLiveData<String>()
+    val smoke: LiveData<String> = _smoke
+
+    private val _coffee = MutableLiveData<String>()
+    val coffee: LiveData<String> = _coffee
+
+    private val _nameUser = MutableLiveData<String>()
+    val nameUser: LiveData<String> = _nameUser
+
+    private val _emailUser = MutableLiveData<String>()
+    val emailUser: LiveData<String> = _emailUser
+
+    private val _passwordNewUser = MutableLiveData<String>()
+    val passwordNewUser: LiveData<String> = _passwordNewUser
+
+    private val _rPasswordNewUser = MutableLiveData<String>()
+    val rPasswordNewUser: LiveData<String> = _rPasswordNewUser
+
+
+
     //Capturar Valores
     fun onLoginChanged(
         name: String,
@@ -86,10 +109,26 @@ class NewUserModel {
     }
 
     fun onLoginChangedHabits(
-        food: String
+        food: String,
+        drunk: String,
+        smoke: String,
+        coffee: String,
     ) {
 
-           _food.value = food
+            _food.value = food
+            _drunk.value = drunk
+            _smoke.value = smoke
+            _coffee.value = coffee
+    }
+
+    fun onLoginChangedAccount(nameUser: String, emailUser: String, passwordNewUser: String, rPasswordNewUser: String)
+
+    {
+        _nameUser.value = nameUser
+        _emailUser.value = emailUser
+        _passwordNewUser.value = passwordNewUser
+        _rPasswordNewUser.value = rPasswordNewUser
+
     }
 
     fun printValues(
@@ -106,6 +145,13 @@ class NewUserModel {
         etnia: String,
         typeBlood: String,
         food: String,
+        drunk: String,
+        smoke: String,
+        coffee: String,
+        nameUser: String,
+        emailUser: String,
+        passwordNewUser: String,
+        rPasswordNewUser: String,
     ) {
 
         Log.d("Registro", "Nombre: $name")
@@ -121,6 +167,15 @@ class NewUserModel {
         Log.d("Registro", "etnia: $etnia")
         Log.d("Registro", "typeBlood: $typeBlood")
         Log.d("Registro", "food: $food")
+        Log.d("Registro", "drunk: $drunk")
+        Log.d("Registro", "smoke: $smoke")
+        Log.d("Registro", "coffee: $coffee")
+        Log.d("Registro", "nameUser: $nameUser")
+        Log.d("Registro", "emailUser: $emailUser")
+        Log.d("Registro", "passwordNewUser: $passwordNewUser")
+        Log.d("Registro", "rPasswordNewUser: $rPasswordNewUser")
+
+
 
 
     }

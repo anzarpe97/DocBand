@@ -87,6 +87,17 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
         val etnia: String by viewModel.etnia.observeAsState(initial = "")
         val typeBlood: String by viewModel.typeBlood.observeAsState(initial = "")
         val food: String by viewModel.food.observeAsState(initial = "")
+        val drunk: String by viewModel.drunk.observeAsState(initial = "")
+        val smoke: String by viewModel.smoke.observeAsState(initial = "")
+        val coffee: String by viewModel.coffee.observeAsState(initial = "")
+        val nameUser: String by viewModel.nameUser.observeAsState(initial = "")
+        val emailUser: String by viewModel.emailUser.observeAsState(initial = "")
+        val passwordNewUser: String by viewModel.passwordNewUser.observeAsState(initial = "")
+        val rPasswordNewUser: String by viewModel.rPasswordNewUser.observeAsState(initial = "")
+
+
+
+
 
 
         Column(modifier = Modifier.fillMaxSize()) {
@@ -145,6 +156,13 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
                                 etnia,
                                 typeBlood,
                                 food,
+                                drunk,
+                                smoke,
+                                coffee,
+                                nameUser,
+                                emailUser,
+                                passwordNewUser,
+                                rPasswordNewUser,
 
                                 )
                         }) {
@@ -183,7 +201,7 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
                         horizontalAlignment = Alignment.Start
                     ) {
 
-                        HabitsContent(viewModel, food)
+                        HabitsContent(viewModel, food, drunk, smoke, coffee)
                     }
 
                 }
@@ -203,7 +221,7 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
 
                         DividerContent("Usuario y Contraseña")
 
-                        AccountContent()
+                        AccountContent(viewModel, nameUser, emailUser, passwordNewUser, rPasswordNewUser, )
                     }
 
 
@@ -243,15 +261,15 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
 }//NewUserR
 
 @Composable
-fun AccountContent() {
+fun AccountContent(viewModel:NewUserModel, nameUser: String, emailUser: String, passwordNewUser: String, rPasswordNewUser: String) {
 
-    NameUser()
+    NameUser(nameUser) {viewModel.onLoginChangedAccount(it, emailUser, passwordNewUser, rPasswordNewUser)}
 
-    EmailUser()
+    EmailUser(emailUser) {viewModel.onLoginChangedAccount(nameUser, it, passwordNewUser, rPasswordNewUser)}
 
-    PasswordNewUser()
+    PasswordNewUser(passwordNewUser) {viewModel.onLoginChangedAccount(nameUser, emailUser, it, rPasswordNewUser)}
 
-    RPasswordNewUser()
+    RPasswordNewUser(rPasswordNewUser) {viewModel.onLoginChangedAccount(nameUser, emailUser, passwordNewUser, it)}
 
 }
 
@@ -477,6 +495,10 @@ fun InfomationContent(
 fun HabitsContent(
     viewModel: NewUserModel,
     food: String,
+    drunk: String,
+    smoke: String,
+    coffee: String,
+
 
     ) {
 
@@ -485,13 +507,13 @@ fun HabitsContent(
     DividerContent(nameDivider = "Habitos")
     Food(food) {
         viewModel.onLoginChangedHabits(
-            it
+            it, drunk, smoke, coffee
         )
     }
 
-    Drunk()
-    Smoke()
-    Coffe()
+    Drunk(drunk) {viewModel.onLoginChangedHabits(food, it, smoke, coffee)}
+    Smoke(smoke) {viewModel.onLoginChangedHabits(food, drunk, it, coffee)}
+    Coffee(coffee) {viewModel.onLoginChangedHabits(food, drunk, smoke, it)}
 }
 
 //DIVIDER
@@ -1122,11 +1144,11 @@ fun Food(foodV: String, onTextFieldChange: (String) -> Unit) {
 }
 
 @Composable
-fun Smoke() {
-    val context = LocalContext.current
-    val typeBlood = arrayOf("", "Frecuente", "Muy Frecuente", "Ocacional", "Muy Poco", "No")
+fun Smoke(smokeV: String, onTextFieldChange: (String) -> Unit) {
+
+    val smoke = arrayOf("", "Frecuente", "Muy Frecuente", "Ocacional", "Muy Poco", "No")
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(typeBlood[0]) }
+    var smokeV by remember { mutableStateOf(smoke[0]) }
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -1145,7 +1167,7 @@ fun Smoke() {
             }
         ) {
             TextField(
-                value = selectedText,
+                value = smokeV,
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -1156,12 +1178,13 @@ fun Smoke() {
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                typeBlood.forEach { item ->
+                smoke.forEach { item ->
                     DropdownMenuItem(
                         text = { Text(text = item) },
                         onClick = {
-                            selectedText = item
+                            smokeV = item
                             expanded = false
+                            onTextFieldChange(item)
 
                         }
                     )
@@ -1172,11 +1195,11 @@ fun Smoke() {
 }
 
 @Composable
-fun Drunk() {
-    val context = LocalContext.current
-    val typeBlood = arrayOf("", "Frecuente", "Muy Frecuente", "Ocacional", "Muy Poco", "No")
+fun Drunk(drunkV: String, onTextFieldChange: (String) -> Unit) {
+
+    val drunk = arrayOf("", "Frecuente", "Muy Frecuente", "Ocacional", "Muy Poco", "No")
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(typeBlood[0]) }
+    var drunkV by remember { mutableStateOf(drunk[0]) }
     val focusManager = LocalFocusManager.current
 
     Spacer(modifier = Modifier.padding(5.dp))
@@ -1196,7 +1219,7 @@ fun Drunk() {
             }
         ) {
             TextField(
-                value = selectedText,
+                value = drunkV,
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -1210,12 +1233,13 @@ fun Drunk() {
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                typeBlood.forEach { item ->
+                drunk.forEach { item ->
                     DropdownMenuItem(
                         text = { Text(text = item) },
                         onClick = {
-                            selectedText = item
+                            drunkV = item
                             expanded = false
+                            onTextFieldChange(item)
 
                         }
                     )
@@ -1226,12 +1250,11 @@ fun Drunk() {
 }
 
 @Composable
-fun Coffe() {
+fun Coffee(coffeeV: String, onTextFieldChange: (String) -> Unit) {
 
-    val context = LocalContext.current
-    val typeBlood = arrayOf("", "Frecuente", "Muy Frecuente", "Ocacional", "Muy Poco", "No")
+    val coffee = arrayOf("", "Frecuente", "Muy Frecuente", "Ocacional", "Muy Poco", "No")
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(typeBlood[0]) }
+    var coffeeV by remember { mutableStateOf(coffee[0]) }
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -1250,7 +1273,7 @@ fun Coffe() {
             }
         ) {
             TextField(
-                value = selectedText,
+                value = coffeeV,
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -1261,12 +1284,13 @@ fun Coffe() {
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                typeBlood.forEach { item ->
+                coffee.forEach { item ->
                     DropdownMenuItem(
                         text = { Text(text = item) },
                         onClick = {
-                            selectedText = item
+                            coffeeV = item
                             expanded = false
+                            onTextFieldChange(item)
 
                         }
                     )
@@ -1278,17 +1302,17 @@ fun Coffe() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - User Name
 @Composable
-fun NameUser() {
+fun NameUser(nameUser: String, onTextFieldChange: (String) -> Unit) {
 
-    var name1 by remember { mutableStateOf("") }
+
 
     textsRegister(inputText = "Nombre de Usuario")
 
     Spacer(modifier = Modifier.padding(5.dp))
 
     TextField(
-        value = name1,
-        onValueChange = { name1 = it },
+        value = nameUser,
+        onValueChange = {onTextFieldChange(it)},
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         singleLine = true,
         textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
@@ -1307,17 +1331,17 @@ fun NameUser() {
 }
 
 @Composable
-fun EmailUser() {
+fun EmailUser(emailUser: String, onTextFieldChange: (String) -> Unit) {
 
-    var name1 by remember { mutableStateOf("") }
+
 
     textsRegister(inputText = "Correo Electronico")
 
     Spacer(modifier = Modifier.padding(5.dp))
 
     TextField(
-        value = name1,
-        onValueChange = { name1 = it },
+        value = emailUser,
+        onValueChange = { onTextFieldChange(it)},
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         singleLine = true,
         textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
@@ -1337,17 +1361,17 @@ fun EmailUser() {
 
 
 @Composable
-fun PasswordNewUser() {
+fun PasswordNewUser(passwordNewUser: String, onTextFieldChange: (String) -> Unit) {
 
-    var name by remember { mutableStateOf("") }
+
 
     textsRegister(inputText = "Contraseña")
 
     Spacer(modifier = Modifier.padding(5.dp))
 
     TextField(
-        value = name,
-        onValueChange = { name = it },
+        value = passwordNewUser,
+        onValueChange = { onTextFieldChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         singleLine = true,
         maxLines = 1,
@@ -1366,17 +1390,17 @@ fun PasswordNewUser() {
 
 
 @Composable
-fun RPasswordNewUser() {
+fun RPasswordNewUser(rPasswordNewUser: String, onTextFieldChange: (String) -> Unit) {
 
-    var name by remember { mutableStateOf("") }
+
 
     textsRegister(inputText = "Repetir Contraseña")
 
 
 
     TextField(
-        value = name,
-        onValueChange = { name = it },
+        value = rPasswordNewUser,
+        onValueChange = {onTextFieldChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         singleLine = true,
         maxLines = 1,
