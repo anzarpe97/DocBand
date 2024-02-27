@@ -6,5 +6,6 @@ sealed class Destinations (val route : String){
     object NewUserR: Destinations ("registro")
     object HomeView: Destinations("HomeView")
     object InfoView: Destinations("InfoView")
+    object QrView: Destinations ("Qr")
 
 }

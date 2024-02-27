@@ -11,6 +11,7 @@ import com.docband.docband.login.ui.LoginScreen
 import com.docband.docband.login.ui.LoginViewModel
 import com.docband.docband.login.ui.NewUserModel
 import com.docband.docband.login.ui.NewUserR
+import com.docband.docband.myQr.QrView
 
 @Composable
 fun NavigationHost(){
@@ -36,12 +37,21 @@ fun NavigationHost(){
 
         composable (HomeView.route){
 
-            HomeView(navHome = {NavControler.navigate(InfoView.route)})
+            HomeView(
+                navHome = {NavControler.navigate(InfoView.route)},
+                qrView = {NavControler.navigate(QrView.route)},
+                )
+
         }
 
         composable (InfoView.route){
 
             InfoView(NavControler)
+        }
+
+        composable (QrView.route){
+
+            QrView(NavControler)
         }
 
     }

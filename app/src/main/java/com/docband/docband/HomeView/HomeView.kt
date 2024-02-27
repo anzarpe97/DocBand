@@ -29,7 +29,7 @@ import com.docband.docband.ui.theme.montserratFamily
 
 
 @Composable
-fun HomeView(navHome : () -> Unit){
+fun HomeView(navHome : () -> Unit,qrView : () -> Unit){
     DocBandTheme {
 
         Column (modifier = Modifier.fillMaxSize()) {
@@ -43,7 +43,7 @@ fun HomeView(navHome : () -> Unit){
 
                 InfoButton(Modifier.fillMaxWidth(), navHome)
                 Spacer(modifier = Modifier.padding(40.dp))
-                MyQR(Modifier.fillMaxWidth())
+                MyQR(Modifier.fillMaxWidth(), qrView)
                 Spacer(modifier = Modifier.padding(40.dp))
                 MedicalHistory(Modifier.fillMaxWidth())
             }
@@ -91,9 +91,9 @@ fun InfoButton(modifier: Modifier, navHome : () -> Unit) {
 }
 
 @Composable
-fun MyQR(modifier: Modifier) {
+fun MyQR(modifier: Modifier, qrView : () -> Unit) {
 
-    Button(onClick = { /*TODO*/ }, modifier.height(80.dp)) {
+    Button(onClick = { qrView() }, modifier.height(80.dp)) {
 
         Text(text = "Mi QR", fontSize = 20.sp, fontFamily = montserratFamily)
 
