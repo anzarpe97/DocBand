@@ -1,5 +1,6 @@
 package com.docband.docband.myQr
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,8 +30,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+
 import com.docband.docband.ui.theme.DocBandTheme
+
+
 import com.docband.docband.ui.theme.montserratFamily
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
 
 @Composable
 fun QrView(NavControler: NavHostController) {
@@ -83,7 +94,9 @@ fun Content(){
     Column (modifier = Modifier.fillMaxSize()) {
 
         ShowQr()
-        Row(modifier = Modifier.fillMaxWidth().height(300.dp), horizontalArrangement = Arrangement.Center) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp), horizontalArrangement = Arrangement.Center) {
             ExportButton()
             ScanButton()
         }
@@ -117,9 +130,18 @@ fun ExportButton(){
 
 @Composable
 fun ScanButton() {
+    var resultadoEscaneo by remember { mutableStateOf("") }
+    val scanLauncher = rememberLauncherForActivityResult(
+        contract = ScanContract(),
+        onResult = { result->
+            resultadoEscaneo = result.contents?:""
+    }
+    )
 
-    Button(onClick = { /*TODO*/ }) {
-        Text(text = "Escanear")
+    Button(onClick = {
+        scanLauncher.launch(ScanOptions())
+    }) {
+        Text(text = "escanear$resultadoEscaneo")
     }
 
 

@@ -45,7 +45,7 @@ class LoginViewModel : ViewModel () {
 
                     else{
 
-                        Log.d("DocBand", "Error: ${task.result.toString()}")
+                        Log.d("juanchacin", "Error: ${task.result.toString()}")
 
                     }
             }
