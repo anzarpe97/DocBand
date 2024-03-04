@@ -7,7 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.docband.docband.newUser.ui.AccountUser
 import com.docband.docband.newUser.ui.DataUser
+import com.docband.docband.newUser.ui.HabitsUser
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -85,30 +87,105 @@ class NewUserModel {
     val rPasswordNewUser: LiveData<String> = _rPasswordNewUser
 
 
-
     //Data Class
 
-    fun sendUserData (name: String, cedula: String, gender: String, placeB: String, religion: String, address: String, usualAddress: String, phoneNumber: String, fPhoneNumber: String, occupation: String, etnia: String, typeBlood: String){
+    fun sendUserData(
+        name: String,
+        cedula: String,
+        gender: String,
+        placeB: String,
+        religion: String,
+        address: String,
+        usualAddress: String,
+        phoneNumber: String,
+        fPhoneNumber: String,
+        occupation: String,
+        etnia: String,
+        typeBlood: String,
+        food: String,
+        drunk: String,
+        smoke: String,
+        coffee: String,
+        emailUser: String,
+        passwordNewUser: String,
+        rPasswordNewUser: String
+    ) {
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        val db = Firebase.firestore
 
-            val db = Firebase.firestore
-            val userNew = DataUser(name, cedula, gender, placeB,religion, address,usualAddress,phoneNumber, fPhoneNumber, occupation,etnia,typeBlood)
+        val userNew = DataUser(
+            name,
+            cedula,
+            gender,
+            placeB,
+            religion,
+            address,
+            usualAddress,
+            phoneNumber,
+            fPhoneNumber,
+            occupation,
+            etnia,
+            typeBlood
+        )
 
-            val flag : Boolean = validatedData(name, cedula, gender, placeB,religion, address,usualAddress,phoneNumber, fPhoneNumber, occupation, etnia, typeBlood)
+        val habitsUser = HabitsUser(food, drunk, smoke, coffee)
+        val accountUser = AccountUser(emailUser, passwordNewUser, cedula)
 
-            if (flag){
+        val flagInformation: Boolean = validatedData(
+            name,
+            cedula,
+            gender,
+            placeB,
+            religion,
+            address,
+            usualAddress,
+            phoneNumber,
+            fPhoneNumber,
+            occupation,
+            etnia,
+            typeBlood
+        )
 
-                db.collection("InformationUsers").document(cedula)
-                    .set(userNew)
-                    .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-                    .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+        val flagHabits : Boolean = validateHabits(food, drunk, smoke, coffee)
+        val flagAccount : Boolean = validateAccount(emailUser, passwordNewUser,rPasswordNewUser)
 
+        if (flagInformation) {
+            if (flagHabits){
+                if (flagAccount) {
+
+                    db.collection("InformationUsers").document(cedula)
+                        .set(userNew)
+                        .addOnSuccessListener {
+                            Log.d(
+                                TAG,
+                                "Registro Informacion Usuario Exitosa!"
+                            )
+                        }
+                        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+
+                    db.collection("HabitsUsers").document(cedula)
+                        .set(habitsUser)
+                        .addOnSuccessListener {
+                            Log.d(
+                                TAG,
+                                "Registro Informacion Habitos Exitosa!"
+                            )
+                        }
+                        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+
+
+                    db.collection("AccountUsers").document(emailUser)
+                        .set(accountUser)
+                        .addOnSuccessListener { Log.d(TAG, "Registro Cuenta Usuarios Exitosa!") }
+                        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+                }
             }
 
-            else{
+        } else {
 
-                print("Hola guapo")
+            print("Hola guapo")
 
-            }
+        }
 
     }
 
@@ -150,124 +227,138 @@ class NewUserModel {
         coffee: String,
     ) {
 
-            _food.value = food
-            _drunk.value = drunk
-            _smoke.value = smoke
-            _coffee.value = coffee
+        _food.value = food
+        _drunk.value = drunk
+        _smoke.value = smoke
+        _coffee.value = coffee
     }
 
-    fun onLoginChangedAccount(nameUser: String, emailUser: String, passwordNewUser: String, rPasswordNewUser: String)
-
-    {
-        _nameUser.value = nameUser
+    fun onLoginChangedAccount(
+        emailUser: String,
+        passwordNewUser: String,
+        rPasswordNewUser: String
+    ) {
         _emailUser.value = emailUser
         _passwordNewUser.value = passwordNewUser
         _rPasswordNewUser.value = rPasswordNewUser
 
     }
 
-    fun validatedData (name: String, cedula: String, gender: String, placeB: String, religion: String, address: String, usualAddress: String, phoneNumber: String, fPhoneNumber: String, occupation: String, etnia: String, typeBlood: String) : Boolean {
+    fun validatedData(
+        name: String,
+        cedula: String,
+        gender: String,
+        placeB: String,
+        religion: String,
+        address: String,
+        usualAddress: String,
+        phoneNumber: String,
+        fPhoneNumber: String,
+        occupation: String,
+        etnia: String,
+        typeBlood: String
+    ): Boolean {
 
         val len = cedula.length
         Log.d("Docband ERROR: ", "Esta Mierda: $len")
-        var allRight : Boolean = true
+        var allRight: Boolean = true
 
-        if (name == ""){
+        if (name == "") {
 
             Log.d("Docband ERROR: ", "Campo Nombre Vacio")
             allRight = false
 
         }
 
-        if (cedula == ""){
+        if (cedula == "") {
 
             Log.d("Docband ERROR: ", "Campo Cedula Vacio")
             allRight = false
 
         }
 
-        if (len < 6 ){
+        if (len < 6) {
 
             Log.d("Docband ERROR: ", "Campo Cedula Invalido")
             allRight = false
         }
 
-        if (len > 8 ){
+        if (len > 8) {
 
             Log.d("Docband ERROR: ", "Campo Cedula Invalido")
             allRight = false
         }
 
-        if (gender == ""){
+        if (gender == "") {
 
             Log.d("Docband ERROR: ", "Campo Genero Vacio")
             allRight = false
 
         }
 
-        if (placeB == ""){
+        if (placeB == "") {
 
             Log.d("Docband ERROR: ", "Campo Lugar Nacimiento Vacio")
             allRight = false
 
         }
 
-        if (religion == ""){
+        if (religion == "") {
 
             Log.d("Docband ERROR: ", "Campo Religion Vacio")
             allRight = false
 
         }
 
-        if (address == ""){
+        if (address == "") {
 
             Log.d("Docband ERROR: ", "Campo Direccion Vacio")
             allRight = false
 
         }
 
-        if (usualAddress == ""){
+        if (usualAddress == "") {
 
             Log.d("Docband ERROR: ", "Campo Direccion Habitual Vacio")
             allRight = false
 
         }
 
-        if (phoneNumber == ""){
+        if (phoneNumber == "") {
 
             Log.d("Docband ERROR: ", "Campo Numero de telefono Vacio")
             allRight = false
 
         }
 
-        if (fPhoneNumber == ""){
+        if (fPhoneNumber == "") {
 
             Log.d("Docband ERROR: ", "Campo Familiar Numero de telefono Vacio")
             allRight = false
         }
 
-        if (occupation == ""){
+        if (occupation == "") {
 
             Log.d("Docband ERROR: ", "Campo Trabajo Vacio")
             allRight = false
 
         }
 
-        if (occupation == ""){
+        if (occupation == "") {
 
             Log.d("Docband ERROR: ", "Campo Trabajo Vacio")
             allRight = false
 
         }
 
-        if (etnia == ""){
+        if (etnia == "") {
 
             Log.d("Docband ERROR: ", "Campo Etnia Vacio")
             allRight = false
 
         }
 
-        if (typeBlood == ""){
+        if (typeBlood == "") {
 
             Log.d("Docband ERROR: ", "Campo Tipo de Sangre Vacio")
             allRight = false
@@ -275,6 +366,83 @@ class NewUserModel {
         }
 
         return allRight
+
+    }
+
+
+    fun validateHabits (food: String,
+                        drunk: String,
+                        smoke: String,
+                        coffee: String) : Boolean {
+
+        var flag : Boolean = true
+
+        if (food == "") {
+
+            Log.d("Docband ERROR: ", "Campo Comida Vacio")
+            flag = false
+
+        }
+
+        if (drunk == "") {
+
+            Log.d("Docband ERROR: ", "Campo Bebidas Vacio")
+            flag = false
+
+        }
+
+        if (smoke == "") {
+
+            Log.d("Docband ERROR: ", "Campo Fumar Vacio")
+            flag = false
+
+        }
+
+        if (coffee == "") {
+
+            Log.d("Docband ERROR: ", "Campo Cafe Vacio")
+            flag = false
+
+        }
+
+        return flag
+
+    }
+
+    fun validateAccount (email: String,
+                        password: String,
+                        rPassword: String) : Boolean {
+
+        Log.d("Docband ERROR: ", password)
+        Log.d("Docband ERROR: ", rPassword)
+
+        var flag : Boolean = true
+
+        if (email == "") {
+
+            Log.d("Docband ERROR: ", "Campo Comida Vacio")
+            flag = false
+
+        }
+
+        if (password != "" && rPassword != "") {
+
+            if (password != rPassword) {
+
+                Log.d("Docband ERROR: ", "Contraseñas Distintas")
+                flag = false
+
+            }
+        }
+
+        else{
+
+                Log.d("Docband ERROR: ", "Campos Vacios Contraseñas")
+                flag = false
+
+        }
+
+        return flag
 
     }
 

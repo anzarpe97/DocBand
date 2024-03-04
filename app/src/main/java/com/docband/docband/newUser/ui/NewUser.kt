@@ -91,7 +91,6 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
         val drunk: String by viewModel.drunk.observeAsState(initial = "")
         val smoke: String by viewModel.smoke.observeAsState(initial = "")
         val coffee: String by viewModel.coffee.observeAsState(initial = "")
-        val nameUser: String by viewModel.nameUser.observeAsState(initial = "")
         val emailUser: String by viewModel.emailUser.observeAsState(initial = "")
         val passwordNewUser: String by viewModel.passwordNewUser.observeAsState(initial = "")
         val rPasswordNewUser: String by viewModel.rPasswordNewUser.observeAsState(initial = "")
@@ -126,7 +125,7 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
 
             LazyColumn() {
 
-                //Informacion
+                //Información
                 item {
 
                     Column(
@@ -136,12 +135,6 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.Start
                     ) {
-                        // - - -  - - - - - - - - - - - - - - - - - - - - - - - - - - - Here
-                        Button(onClick = {
-                           viewModel.sendUserData(name, cedula, gender, placeB,religion, address,usualAddress,phoneNumber, fPhoneNumber, occupation,etnia,typeBlood)
-                        }) {
-                            Text(text = "Presionar")
-                        }
                         InfomationContent(
                             viewModel,
                             name,
@@ -155,12 +148,8 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
                             fPhoneNumber,
                             occupation,
                             etnia,
-                            typeBlood,
-
-
-                            )
+                            typeBlood)
                     }
-
                 }
 
                 //Habitos
@@ -174,10 +163,8 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.Start
                     ) {
-
                         HabitsContent(viewModel, food, drunk, smoke, coffee)
                     }
-
                 }
 
                 //Cuenta Usuario
@@ -195,7 +182,7 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
 
                         DividerContent("Usuario y Contraseña")
 
-                        AccountContent(viewModel, nameUser, emailUser, passwordNewUser, rPasswordNewUser, )
+                        AccountContent(viewModel, emailUser, passwordNewUser, rPasswordNewUser)
                     }
 
 
@@ -217,7 +204,27 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
                         ButtonRegister(
                             modifier = Modifier.align(Alignment.CenterHorizontally),
                             MedCheck(),
-                            navController
+                            navController,
+                            viewModel,
+                            name,
+                            cedula,
+                            gender,
+                            placeB,
+                            religion,
+                            address,
+                            usualAddress,
+                            phoneNumber,
+                            fPhoneNumber,
+                            occupation,
+                            etnia,
+                            typeBlood,
+                            food,
+                            drunk,
+                            smoke,
+                            coffee,
+                            emailUser,
+                            passwordNewUser,
+                            rPasswordNewUser
                         )
 
                         Spacer(modifier = Modifier.padding(15.dp))
@@ -235,15 +242,31 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
 }//NewUserR
 
 @Composable
-fun AccountContent(viewModel:NewUserModel, nameUser: String, emailUser: String, passwordNewUser: String, rPasswordNewUser: String) {
+fun AccountContent(
+    viewModel: NewUserModel,
+    emailUser: String,
+    passwordNewUser: String,
+    rPasswordNewUser: String
+) {
 
-    NameUser(nameUser) {viewModel.onLoginChangedAccount(it, emailUser, passwordNewUser, rPasswordNewUser)}
 
-    EmailUser(emailUser) {viewModel.onLoginChangedAccount(nameUser, it, passwordNewUser, rPasswordNewUser)}
+    EmailUser(emailUser) { viewModel.onLoginChangedAccount(it, passwordNewUser, rPasswordNewUser) }
 
-    PasswordNewUser(passwordNewUser) {viewModel.onLoginChangedAccount(nameUser, emailUser, it, rPasswordNewUser)}
+    PasswordNewUser(passwordNewUser) {
+        viewModel.onLoginChangedAccount(
+            emailUser,
+            it,
+            rPasswordNewUser
+        )
+    }
 
-    RPasswordNewUser(rPasswordNewUser) {viewModel.onLoginChangedAccount(nameUser, emailUser, passwordNewUser, it)}
+    RPasswordNewUser(rPasswordNewUser) {
+        viewModel.onLoginChangedAccount(
+            emailUser,
+            passwordNewUser,
+            it
+        )
+    }
 
 }
 
@@ -485,9 +508,9 @@ fun HabitsContent(
         )
     }
 
-    Drunk(drunk) {viewModel.onLoginChangedHabits(food, it, smoke, coffee)}
-    Smoke(smoke) {viewModel.onLoginChangedHabits(food, drunk, it, coffee)}
-    Coffee(coffee) {viewModel.onLoginChangedHabits(food, drunk, smoke, it)}
+    Drunk(drunk) { viewModel.onLoginChangedHabits(food, it, smoke, coffee) }
+    Smoke(smoke) { viewModel.onLoginChangedHabits(food, drunk, it, coffee) }
+    Coffee(coffee) { viewModel.onLoginChangedHabits(food, drunk, smoke, it) }
 }
 
 //DIVIDER
@@ -1274,39 +1297,8 @@ fun Coffee(coffeeV: String, onTextFieldChange: (String) -> Unit) {
     }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - User Name
-@Composable
-fun NameUser(nameUser: String, onTextFieldChange: (String) -> Unit) {
-
-
-
-    textsRegister(inputText = "Nombre de Usuario")
-
-    Spacer(modifier = Modifier.padding(5.dp))
-
-    TextField(
-        value = nameUser,
-        onValueChange = {onTextFieldChange(it)},
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-        singleLine = true,
-        textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
-        maxLines = 1,
-        shape = RoundedCornerShape(12.dp),
-        colors = TextFieldDefaults.textFieldColors(
-
-            unfocusedIndicatorColor = Color.Transparent,
-            focusedIndicatorColor = Color.Transparent
-
-        )
-    )
-
-    Spacer(modifier = Modifier.padding(5.dp))
-
-}
-
 @Composable
 fun EmailUser(emailUser: String, onTextFieldChange: (String) -> Unit) {
-
 
 
     textsRegister(inputText = "Correo Electronico")
@@ -1315,7 +1307,7 @@ fun EmailUser(emailUser: String, onTextFieldChange: (String) -> Unit) {
 
     TextField(
         value = emailUser,
-        onValueChange = { onTextFieldChange(it)},
+        onValueChange = { onTextFieldChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         singleLine = true,
         textStyle = TextStyle(fontSize = 20.sp, color = MaterialTheme.colorScheme.primary),
@@ -1336,7 +1328,6 @@ fun EmailUser(emailUser: String, onTextFieldChange: (String) -> Unit) {
 
 @Composable
 fun PasswordNewUser(passwordNewUser: String, onTextFieldChange: (String) -> Unit) {
-
 
 
     textsRegister(inputText = "Contraseña")
@@ -1367,14 +1358,13 @@ fun PasswordNewUser(passwordNewUser: String, onTextFieldChange: (String) -> Unit
 fun RPasswordNewUser(rPasswordNewUser: String, onTextFieldChange: (String) -> Unit) {
 
 
-
     textsRegister(inputText = "Repetir Contraseña")
 
 
 
     TextField(
         value = rPasswordNewUser,
-        onValueChange = {onTextFieldChange(it) },
+        onValueChange = { onTextFieldChange(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         singleLine = true,
         maxLines = 1,
@@ -1421,7 +1411,31 @@ fun MedCheck(): Boolean {
 }
 
 @Composable
-fun ButtonRegister(modifier: Modifier, med: Boolean, navController: NavController) {
+fun ButtonRegister(
+    modifier: Modifier,
+    med: Boolean,
+    navController: NavController,
+    viewModel: NewUserModel,
+    name: String,
+    cedula: String,
+    gender: String,
+    placeB: String,
+    religion: String,
+    address: String,
+    usualAddress: String,
+    phoneNumber: String,
+    fPhoneNumber: String,
+    occupation: String,
+    etnia: String,
+    typeBlood: String,
+    food: String,
+    drunk: String,
+    smoke: String,
+    coffee: String,
+    emailUser: String,
+    passwordNewUser: String,
+    rPasswordNewUser: String
+) {
 
     val context = LocalContext.current
 
@@ -1434,7 +1448,26 @@ fun ButtonRegister(modifier: Modifier, med: Boolean, navController: NavControlle
                 navController.popBackStack()
 
             } else {
-
+                viewModel.sendUserData(
+                    name,
+                    cedula,
+                    gender,
+                    placeB,
+                    religion,
+                    address,
+                    usualAddress,
+                    phoneNumber,
+                    fPhoneNumber,
+                    occupation,
+                    etnia,
+                    typeBlood,
+                    food,
+                    drunk,
+                    smoke,
+                    coffee,
+                    emailUser,
+                    passwordNewUser,
+                    rPasswordNewUser)
                 Toast.makeText(context, "Registro Exitoso (Paciente)", Toast.LENGTH_SHORT).show()
                 navController.popBackStack()
             }
@@ -1450,51 +1483,3 @@ fun ButtonRegister(modifier: Modifier, med: Boolean, navController: NavControlle
     }
 
 }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Combobox
-@Composable
-fun EditableExposedDropdownMenuSample() {
-
-    // MenuOptions
-    val options = listOf("General", "Birthday", "Anniversary", "Meeting", "Call", "Shopping")
-    var expanded by remember { mutableStateOf(false) }
-    var selectOptionText by remember { mutableStateOf(options[0]) }
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    Box(modifier = Modifier.fillMaxSize()) {
-    }
-
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded }) {
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .menuAnchor(),
-            readOnly = false,
-            value = selectOptionText,
-            onValueChange = {},
-            label = { Text(text = "Category") },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
-        )//OutlinedTextField
-
-        ExposedDropdownMenu(
-
-            expanded = expanded,
-            onDismissRequest = { expanded = false }) {
-
-            options.forEach { selectOption ->
-
-                DropdownMenuItem(
-                    text = { Text(text = selectOption) },
-                    onClick = {
-                        selectOptionText = selectOption
-                        expanded = false
-                    },
-                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                )
-            }
-        }//ExposedDropdownMenu
-    }//ExposedDropdownMenuBox
-}//EditableExposedDropdownMenuSample

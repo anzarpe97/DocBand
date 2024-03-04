@@ -71,12 +71,5 @@ class LoginViewModel : ViewModel () {
 
     fun isValidPassword(password: String): Boolean = password.length > 6
 
-    fun printValues(email: String,password: String) {
-
-        Log.d("Login", "Nombre: $email")
-        Log.d("Login", "cedula: $password")
-
-    }
-
 
 }
