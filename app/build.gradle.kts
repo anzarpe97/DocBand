@@ -83,6 +83,11 @@ dependencies {
 
     implementation ("com.google.zxing:core:3.4.1")
 
+    //qrgenerator
+    implementation ("com.github.kenglxn.QRGen:android:3.0.1")
+
+
+
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4")
     val navVersion = "2.4.0-alpha05"
     implementation ("androidx.navigation:navigation-compose:$navVersion")
