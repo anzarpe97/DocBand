@@ -40,6 +40,11 @@ import com.docband.docband.ui.theme.DocBandTheme
 import com.docband.docband.ui.theme.montserratFamily
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
+import android.graphics.Bitmap
+import android.widget.ImageView
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import net.glxn.qrgen.android.QRCode
 
 @Composable
 fun QrView(NavControler: NavHostController) {
