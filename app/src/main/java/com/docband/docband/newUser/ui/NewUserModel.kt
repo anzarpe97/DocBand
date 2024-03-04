@@ -86,6 +86,10 @@ class NewUserModel {
     private val _rPasswordNewUser = MutableLiveData<String>()
     val rPasswordNewUser: LiveData<String> = _rPasswordNewUser
 
+    private val _newUserEnable = MutableLiveData<Boolean>()
+    val newUserEnable: LiveData<Boolean> = _newUserEnable
+
+
 
     //Data Class
 

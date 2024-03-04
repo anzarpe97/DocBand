@@ -1,6 +1,5 @@
 @file:OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
-    ExperimentalComposeUiApi::class
+    ExperimentalMaterial3Api::class
 )
 
 package com.docband.docband.login.ui
@@ -94,6 +93,8 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
         val emailUser: String by viewModel.emailUser.observeAsState(initial = "")
         val passwordNewUser: String by viewModel.passwordNewUser.observeAsState(initial = "")
         val rPasswordNewUser: String by viewModel.rPasswordNewUser.observeAsState(initial = "")
+
+        val newUserEnable : Boolean by viewModel.newUserEnable.observeAsState(initial = false)
 
         Column(modifier = Modifier.fillMaxSize()) {
 
@@ -340,6 +341,7 @@ fun InfomationContent(
         )
     }
     DateUser()
+
     PlaceBrith(placeB) {
         viewModel.onLoginChanged(
             name,
@@ -617,10 +619,8 @@ fun NumCedula(cedulaV: String, onTextFieldChange: (String) -> Unit) {
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         colors = TextFieldDefaults.textFieldColors(
-
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent
-
         )
     )
 
@@ -724,7 +724,6 @@ fun PlaceBrith(placeB: String, onTextFieldChange: (String) -> Unit) {
 
 @Composable
 fun Address(address: String, onTextFieldChange: (String) -> Unit) {
-
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -881,49 +880,42 @@ fun Occupation(occupation: String, onTextFieldChange: (String) -> Unit) {
 @Composable
 fun Gender(generV: String, onTextFieldChange: (String) -> Unit) {
 
-    val gener = arrayOf("", "Masculino", "Femenino", "Otro")
-    var expanded by remember { mutableStateOf(false) }
-    var generV by remember { mutableStateOf(gener[0]) }
-
     Spacer(modifier = Modifier.padding(5.dp))
 
     textsRegister(inputText = "Genero")
 
     Spacer(modifier = Modifier.padding(5.dp))
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
+    val options = listOf( " ", "Masculino", "Femenino", "Otro")
+    var expanded by remember { mutableStateOf(false) }
+    var gender by remember { mutableStateOf(options[0]) }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
     ) {
-        ExposedDropdownMenuBox(
+        TextField(
+            modifier = Modifier.menuAnchor(),
+            readOnly = true,
+            value = gender,
+            onValueChange = {},
+            label = { Text("Selecciona Un Genero:") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+        )
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = {
-                expanded = !expanded
-            }
+            onDismissRequest = { expanded = false },
         ) {
-            TextField(
-                value = generV,
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor()
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                gener.forEach { item ->
-                    DropdownMenuItem(
-                        text = { Text(text = item) },
-                        onClick = {
-                            generV = item
-                            expanded = false
-                            onTextFieldChange(item)
-
-                        }
-                    )
-                }
+            options.forEach { item ->
+                DropdownMenuItem(
+                    text = { Text(item) },
+                    onClick = {
+                        gender = item
+                        expanded = false
+                        onTextFieldChange(item)
+                    },
+                )
             }
         }
     }
@@ -934,10 +926,6 @@ fun Gender(generV: String, onTextFieldChange: (String) -> Unit) {
 
 @Composable
 fun Religion(religionB: String, onTextFieldChange: (String) -> Unit) {
-    val context = LocalContext.current
-    val religion = arrayOf("", "Cristiana", "Catolica", "Testigos de Jehova", "Ninguna")
-    var expanded by remember { mutableStateOf(false) }
-    var religionB by remember { mutableStateOf(religion[0]) }
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -945,91 +933,81 @@ fun Religion(religionB: String, onTextFieldChange: (String) -> Unit) {
 
     Spacer(modifier = Modifier.padding(5.dp))
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
+    val options = listOf( " ", "Cristiana", "Catolica", "Testigo De Jehova", " Atea", "Otros")
+    var expanded by remember { mutableStateOf(false) }
+    var religion by remember { mutableStateOf(options[0]) }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
     ) {
-        ExposedDropdownMenuBox(
+        TextField(
+            modifier = Modifier.menuAnchor(),
+            readOnly = true,
+            value = religion,
+            onValueChange = {},
+            label = { Text("Selecciona Una Religión:") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+        )
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = {
-                expanded = !expanded
-            }
+            onDismissRequest = { expanded = false },
         ) {
-            TextField(
-                value = religionB,
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor()
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                religion.forEach { item ->
-                    DropdownMenuItem(
-                        text = { Text(text = item) },
-                        onClick = {
-                            religionB = item
-                            expanded = false
-                            onTextFieldChange(item)
-
-                        }
-                    )
-                }
+            options.forEach { item ->
+                DropdownMenuItem(
+                    text = { Text(item) },
+                    onClick = {
+                        religion = item
+                        expanded = false
+                        onTextFieldChange(item)
+                    },
+                )
             }
         }
     }
-
+    Spacer(modifier = Modifier.padding(5.dp))
 }
 
 @Composable
 fun Etnia(etniaV: String, onTextFieldChange: (String) -> Unit) {
 
-    val etnia = arrayOf("", "Si", "No")
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    textsRegister(inputText = "Religión")
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    val options = listOf( " ", "Si", "No")
     var expanded by remember { mutableStateOf(false) }
-    var etniaV by remember { mutableStateOf(etnia[0]) }
+    var etnia by remember { mutableStateOf(options[0]) }
 
-    Spacer(modifier = Modifier.padding(5.dp))
-
-    textsRegister(inputText = "Etnia")
-
-    Spacer(modifier = Modifier.padding(5.dp))
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
     ) {
-        ExposedDropdownMenuBox(
+        TextField(
+            modifier = Modifier.menuAnchor(),
+            readOnly = true,
+            value = etnia,
+            onValueChange = {},
+            label = { Text("Selecciona Una Etnia:") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+        )
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = {
-                expanded = !expanded
-            }
+            onDismissRequest = { expanded = false },
         ) {
-            TextField(
-                value = etniaV,
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor()
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                etnia.forEach { item ->
-                    DropdownMenuItem(
-                        text = { Text(text = item) },
-                        onClick = {
-                            etniaV = item
-                            expanded = false
-                            onTextFieldChange(item)
-
-                        }
-                    )
-                }
+            options.forEach { item ->
+                DropdownMenuItem(
+                    text = { Text(item) },
+                    onClick = {
+                        etnia = item
+                        expanded = false
+                        onTextFieldChange(item)
+                    },
+                )
             }
         }
     }
@@ -1039,165 +1017,147 @@ fun Etnia(etniaV: String, onTextFieldChange: (String) -> Unit) {
 @Composable
 fun TypeBlood(typeBloodV: String, onTextFieldChange: (String) -> Unit) {
 
-    val typeBlood = arrayOf("", "A+", "A-", "B+", "B-", "AB+", "AB-", "AB-", "O+", "O-")
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    textsRegister(inputText = "Tipo De Sangre")
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    val options = listOf("", "A+", "A-", "B+", "B-", "AB+", "AB-", "AB-", "O+", "O-")
     var expanded by remember { mutableStateOf(false) }
-    var typeBloodV by remember { mutableStateOf(typeBlood[0]) }
+    var tBlood by remember { mutableStateOf(options[0]) }
 
-    Spacer(modifier = Modifier.padding(5.dp))
-
-    textsRegister(inputText = "Tipo de Sangre")
-
-    Spacer(modifier = Modifier.padding(5.dp))
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
     ) {
-        ExposedDropdownMenuBox(
+        TextField(
+            modifier = Modifier.menuAnchor(),
+            readOnly = true,
+            value = tBlood,
+            onValueChange = {},
+            label = { Text("Selecciona Tipo De Sangre:") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+        )
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = {
-                expanded = !expanded
-            }
+            onDismissRequest = { expanded = false },
         ) {
-            TextField(
-                value = typeBloodV,
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor()
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                typeBlood.forEach { item ->
-                    DropdownMenuItem(
-                        text = { Text(text = item) },
-                        onClick = {
-                            typeBloodV = item
-                            expanded = false
-                            onTextFieldChange(item)
-
-                        }
-                    )
-                }
+            options.forEach { item ->
+                DropdownMenuItem(
+                    text = { Text(item) },
+                    onClick = {
+                        tBlood = item
+                        expanded = false
+                        onTextFieldChange(item)
+                    },
+                )
             }
         }
     }
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Habits
 
 @Composable
 fun Food(foodV: String, onTextFieldChange: (String) -> Unit) {
-    val food = arrayOf("", "Balanceada", "No Balanceada")
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    textsRegister(inputText = "Alimentación")
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    val options = listOf("", "Balanceada", "No Balanceada")
     var expanded by remember { mutableStateOf(false) }
-    var foodV by remember { mutableStateOf(food[0]) }
+    var food by remember { mutableStateOf(options[0]) }
 
-    Spacer(modifier = Modifier.padding(5.dp))
-
-    textsRegister(inputText = "Tipo de Alimentación")
-
-    Spacer(modifier = Modifier.padding(5.dp))
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
     ) {
-        ExposedDropdownMenuBox(
+        TextField(
+            modifier = Modifier.menuAnchor(),
+            readOnly = true,
+            value = food,
+            onValueChange = {},
+            label = { Text("Seleccione Alimentación:") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+        )
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = {
-                expanded = !expanded
-            }
+            onDismissRequest = { expanded = false },
         ) {
-            TextField(
-                value = foodV,
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor()
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                food.forEach { item ->
-                    DropdownMenuItem(
-                        text = { Text(text = item) },
-                        onClick = {
-                            foodV = item
-                            expanded = false
-                            onTextFieldChange(item)
-
-
-                        }
-                    )
-                }
+            options.forEach { item ->
+                DropdownMenuItem(
+                    text = { Text(item) },
+                    onClick = {
+                        food = item
+                        expanded = false
+                        onTextFieldChange(item)
+                    },
+                )
             }
         }
     }
+
+    Spacer(modifier = Modifier.padding(5.dp))
 }
+
+
 
 @Composable
 fun Smoke(smokeV: String, onTextFieldChange: (String) -> Unit) {
-
-    val smoke = arrayOf("", "Frecuente", "Muy Frecuente", "Ocacional", "Muy Poco", "No")
-    var expanded by remember { mutableStateOf(false) }
-    var smokeV by remember { mutableStateOf(smoke[0]) }
-
     Spacer(modifier = Modifier.padding(5.dp))
 
     textsRegister(inputText = "Tabáquico")
 
     Spacer(modifier = Modifier.padding(5.dp))
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
+    val options = listOf("", "Frecuente", "Muy Frecuente", "Ocacional", "Muy Poco", "No")
+    var expanded by remember { mutableStateOf(false) }
+    var smoke by remember { mutableStateOf(options[0]) }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
     ) {
-        ExposedDropdownMenuBox(
+        TextField(
+            modifier = Modifier.menuAnchor(),
+            readOnly = true,
+            value = smoke,
+            onValueChange = {},
+            label = { Text("Seleccione Frecuencía:") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+        )
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = {
-                expanded = !expanded
-            }
+            onDismissRequest = { expanded = false },
         ) {
-            TextField(
-                value = smokeV,
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor()
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                smoke.forEach { item ->
-                    DropdownMenuItem(
-                        text = { Text(text = item) },
-                        onClick = {
-                            smokeV = item
-                            expanded = false
-                            onTextFieldChange(item)
-
-                        }
-                    )
-                }
+            options.forEach { item ->
+                DropdownMenuItem(
+                    text = { Text(item) },
+                    onClick = {
+                        smoke = item
+                        expanded = false
+                        onTextFieldChange(item)
+                    },
+                )
             }
         }
     }
+
+    Spacer(modifier = Modifier.padding(5.dp))
 }
 
 @Composable
 fun Drunk(drunkV: String, onTextFieldChange: (String) -> Unit) {
-
-    val drunk = arrayOf("", "Frecuente", "Muy Frecuente", "Ocacional", "Muy Poco", "No")
-    var expanded by remember { mutableStateOf(false) }
-    var drunkV by remember { mutableStateOf(drunk[0]) }
-    val focusManager = LocalFocusManager.current
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -1205,42 +1165,36 @@ fun Drunk(drunkV: String, onTextFieldChange: (String) -> Unit) {
 
     Spacer(modifier = Modifier.padding(5.dp))
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
+    val options = listOf("", "Frecuente", "Muy Frecuente", "Ocacional", "Muy Poco", "No")
+    var expanded by remember { mutableStateOf(false) }
+    var drunk by remember { mutableStateOf(options[0]) }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
     ) {
-        ExposedDropdownMenuBox(
+        TextField(
+            modifier = Modifier.menuAnchor(),
+            readOnly = true,
+            value = drunk,
+            onValueChange = {},
+            label = { Text("Seleccione Frecuencía:") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+        )
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = {
-                expanded = !expanded
-            }
+            onDismissRequest = { expanded = false },
         ) {
-            TextField(
-                value = drunkV,
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor(),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
-
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                drunk.forEach { item ->
-                    DropdownMenuItem(
-                        text = { Text(text = item) },
-                        onClick = {
-                            drunkV = item
-                            expanded = false
-                            onTextFieldChange(item)
-
-                        }
-                    )
-                }
+            options.forEach { item ->
+                DropdownMenuItem(
+                    text = { Text(item) },
+                    onClick = {
+                        drunk = item
+                        expanded = false
+                        onTextFieldChange(item)
+                    },
+                )
             }
         }
     }
@@ -1249,49 +1203,42 @@ fun Drunk(drunkV: String, onTextFieldChange: (String) -> Unit) {
 @Composable
 fun Coffee(coffeeV: String, onTextFieldChange: (String) -> Unit) {
 
-    val coffee = arrayOf("", "Frecuente", "Muy Frecuente", "Ocacional", "Muy Poco", "No")
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    textsRegister(inputText = "Alcohol")
+
+    Spacer(modifier = Modifier.padding(5.dp))
+
+    val options = listOf("", "Frecuente", "Muy Frecuente", "Ocacional", "Muy Poco", "No")
     var expanded by remember { mutableStateOf(false) }
-    var coffeeV by remember { mutableStateOf(coffee[0]) }
+    var coffee by remember { mutableStateOf(options[0]) }
 
-    Spacer(modifier = Modifier.padding(5.dp))
-
-    textsRegister(inputText = "Café")
-
-    Spacer(modifier = Modifier.padding(5.dp))
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
     ) {
-        ExposedDropdownMenuBox(
+        TextField(
+            modifier = Modifier.menuAnchor(),
+            readOnly = true,
+            value = coffee,
+            onValueChange = {},
+            label = {Text("Seleccione Frecuencía:") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+        )
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = {
-                expanded = !expanded
-            }
+            onDismissRequest = { expanded = false },
         ) {
-            TextField(
-                value = coffeeV,
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor()
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                coffee.forEach { item ->
-                    DropdownMenuItem(
-                        text = { Text(text = item) },
-                        onClick = {
-                            coffeeV = item
-                            expanded = false
-                            onTextFieldChange(item)
-
-                        }
-                    )
-                }
+            options.forEach { item ->
+                DropdownMenuItem(
+                    text = { Text(item) },
+                    onClick = {
+                        coffee = item
+                        expanded = false
+                        onTextFieldChange(item)
+                    },
+                )
             }
         }
     }

@@ -96,7 +96,7 @@ fun Content(){
         ShowQr()
         Row(modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp), horizontalArrangement = Arrangement.Center) {
+            .height(300.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
             ExportButton()
             ScanButton()
         }
@@ -108,14 +108,14 @@ fun Content(){
 
 @Composable
 fun ShowQr(){
-
-    Column {
+ //________________________________________________________________________________________________________________________________
+    Column (modifier = Modifier.fillMaxWidth().height(620.dp)) {
 
 
 
     }
 
-
+//___________________________________________________________________________________________________________________________________
 }
 
 
@@ -123,7 +123,7 @@ fun ShowQr(){
 fun ExportButton(){
 
         Button(onClick = { /*TODO*/ }) {
-            Text(text = "Exportar")
+            Text(text = "Exportar", fontSize = 18.sp)
         }
 
 }
@@ -141,7 +141,7 @@ fun ScanButton() {
     Button(onClick = {
         scanLauncher.launch(ScanOptions())
     }) {
-        Text(text = "escanear$resultadoEscaneo")
+        Text(text = "Escanear$resultadoEscaneo", fontSize = 18.sp)
     }
 
 
