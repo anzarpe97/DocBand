@@ -68,6 +68,7 @@ import com.docband.docband.ui.theme.DocBandTheme
 import java.time.Instant
 import java.time.ZoneId
 
+
 @Composable
 fun NewUserR(navController: NavController, viewModel: NewUserModel) {
 
@@ -94,11 +95,6 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
         val emailUser: String by viewModel.emailUser.observeAsState(initial = "")
         val passwordNewUser: String by viewModel.passwordNewUser.observeAsState(initial = "")
         val rPasswordNewUser: String by viewModel.rPasswordNewUser.observeAsState(initial = "")
-
-
-
-
-
 
         Column(modifier = Modifier.fillMaxSize()) {
 
@@ -142,29 +138,7 @@ fun NewUserR(navController: NavController, viewModel: NewUserModel) {
                     ) {
                         // - - -  - - - - - - - - - - - - - - - - - - - - - - - - - - - Here
                         Button(onClick = {
-                            viewModel.printValues(
-                                name,
-                                cedula,
-                                gender,
-                                placeB,
-                                religion,
-                                address,
-                                usualAddress,
-                                phoneNumber,
-                                fPhoneNumber,
-                                occupation,
-                                etnia,
-                                typeBlood,
-                                food,
-                                drunk,
-                                smoke,
-                                coffee,
-                                nameUser,
-                                emailUser,
-                                passwordNewUser,
-                                rPasswordNewUser,
-
-                                )
+                           viewModel.sendUserData(name, cedula, gender, placeB,religion, address,usualAddress,phoneNumber, fPhoneNumber, occupation,etnia,typeBlood)
                         }) {
                             Text(text = "Presionar")
                         }
@@ -289,7 +263,6 @@ fun InfomationContent(
     etnia: String,
     typeBlood: String,
 ) {
-
     Spacer(modifier = Modifier.padding(10.dp))
 
     DividerContent(nameDivider = "Informacion Personal")
@@ -310,6 +283,7 @@ fun InfomationContent(
             typeBlood,
         )
     }
+
     NumCedula(cedula) {
         viewModel.onLoginChanged(
             name,

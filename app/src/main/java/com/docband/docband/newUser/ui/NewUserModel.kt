@@ -1,8 +1,18 @@
 package com.docband.docband.login.ui
 
+import android.content.ContentValues.TAG
 import android.util.Log
+import android.widget.Toast
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.docband.docband.newUser.ui.DataUser
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
+
 
 class NewUserModel {
 
@@ -76,6 +86,32 @@ class NewUserModel {
 
 
 
+    //Data Class
+
+    fun sendUserData (name: String, cedula: String, gender: String, placeB: String, religion: String, address: String, usualAddress: String, phoneNumber: String, fPhoneNumber: String, occupation: String, etnia: String, typeBlood: String){
+
+            val db = Firebase.firestore
+            val userNew = DataUser(name, cedula, gender, placeB,religion, address,usualAddress,phoneNumber, fPhoneNumber, occupation,etnia,typeBlood)
+
+            val flag : Boolean = validatedData(name, cedula, gender, placeB,religion, address,usualAddress,phoneNumber, fPhoneNumber, occupation, etnia, typeBlood)
+
+            if (flag){
+
+                db.collection("InformationUsers").document(cedula)
+                    .set(userNew)
+                    .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                    .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+
+            }
+
+            else{
+
+                print("Hola guapo")
+
+            }
+
+    }
+
     //Capturar Valores
     fun onLoginChanged(
         name: String,
@@ -130,50 +166,117 @@ class NewUserModel {
 
     }
 
-    fun printValues(
-        name: String,
-        cedula: String,
-        gender: String,
-        placeB: String,
-        religion: String,
-        address: String,
-        usualAddress: String,
-        phoneNumber: String,
-        fPhoneNumber: String,
-        occupation: String,
-        etnia: String,
-        typeBlood: String,
-        food: String,
-        drunk: String,
-        smoke: String,
-        coffee: String,
-        nameUser: String,
-        emailUser: String,
-        passwordNewUser: String,
-        rPasswordNewUser: String,
-    ) {
+    fun validatedData (name: String, cedula: String, gender: String, placeB: String, religion: String, address: String, usualAddress: String, phoneNumber: String, fPhoneNumber: String, occupation: String, etnia: String, typeBlood: String) : Boolean {
 
-        Log.d("Registro", "Nombre: $name")
-        Log.d("Registro", "cedula: $cedula")
-        Log.d("Registro", "Genero: $gender")
-        Log.d("Registro", "Lugar de Nacimiento: $placeB")
-        Log.d("Registro", "Religion: $religion")
-        Log.d("Registro", "Address: $address")
-        Log.d("Registro", "usualAddress: $usualAddress")
-        Log.d("Registro", "phoneNumber: $phoneNumber")
-        Log.d("Registro", "fPhoneNumber: $fPhoneNumber")
-        Log.d("Registro", "occupation: $occupation")
-        Log.d("Registro", "etnia: $etnia")
-        Log.d("Registro", "typeBlood: $typeBlood")
-        Log.d("Registro", "food: $food")
-        Log.d("Registro", "drunk: $drunk")
-        Log.d("Registro", "smoke: $smoke")
-        Log.d("Registro", "coffee: $coffee")
-        Log.d("Registro", "nameUser: $nameUser")
-        Log.d("Registro", "emailUser: $emailUser")
-        Log.d("Registro", "passwordNewUser: $passwordNewUser")
-        Log.d("Registro", "rPasswordNewUser: $rPasswordNewUser")
+        val len = cedula.length
+        Log.d("Docband ERROR: ", "Esta Mierda: $len")
+        var allRight : Boolean = true
+
+        if (name == ""){
+
+            Log.d("Docband ERROR: ", "Campo Nombre Vacio")
+            allRight = false
+
+        }
+
+        if (cedula == ""){
+
+            Log.d("Docband ERROR: ", "Campo Cedula Vacio")
+            allRight = false
+
+        }
+
+        if (len < 6 ){
+
+            Log.d("Docband ERROR: ", "Campo Cedula Invalido")
+            allRight = false
+        }
+
+        if (len > 8 ){
+
+            Log.d("Docband ERROR: ", "Campo Cedula Invalido")
+            allRight = false
+        }
+
+        if (gender == ""){
+
+            Log.d("Docband ERROR: ", "Campo Genero Vacio")
+            allRight = false
+
+        }
+
+        if (placeB == ""){
+
+            Log.d("Docband ERROR: ", "Campo Lugar Nacimiento Vacio")
+            allRight = false
+
+        }
+
+        if (religion == ""){
+
+            Log.d("Docband ERROR: ", "Campo Religion Vacio")
+            allRight = false
+
+        }
+
+        if (address == ""){
+
+            Log.d("Docband ERROR: ", "Campo Direccion Vacio")
+            allRight = false
+
+        }
+
+        if (usualAddress == ""){
+
+            Log.d("Docband ERROR: ", "Campo Direccion Habitual Vacio")
+            allRight = false
+
+        }
+
+        if (phoneNumber == ""){
+
+            Log.d("Docband ERROR: ", "Campo Numero de telefono Vacio")
+            allRight = false
+
+        }
+
+        if (fPhoneNumber == ""){
+
+            Log.d("Docband ERROR: ", "Campo Familiar Numero de telefono Vacio")
+            allRight = false
+        }
+
+        if (occupation == ""){
+
+            Log.d("Docband ERROR: ", "Campo Trabajo Vacio")
+            allRight = false
+
+        }
+
+        if (occupation == ""){
+
+            Log.d("Docband ERROR: ", "Campo Trabajo Vacio")
+            allRight = false
+
+        }
+
+        if (etnia == ""){
+
+            Log.d("Docband ERROR: ", "Campo Etnia Vacio")
+            allRight = false
+
+        }
+
+        if (typeBlood == ""){
+
+            Log.d("Docband ERROR: ", "Campo Tipo de Sangre Vacio")
+            allRight = false
+
+        }
+
+        return allRight
 
     }
+
 
 }
