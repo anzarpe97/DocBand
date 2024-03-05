@@ -82,9 +82,13 @@ dependencies {
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
 
     implementation ("com.google.zxing:core:3.4.1")
+    implementation ("com.google.zxing:core:3.5.1")
 
     //qrgenerator
     implementation ("com.github.kenglxn.QRGen:android:3.0.1")
+
+    //lightspark
+    implementation("com.lightspark:compose-qr-code:1.0.1")
 
 
 
