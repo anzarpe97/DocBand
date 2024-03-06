@@ -4,6 +4,7 @@
 
 package com.docband.docband.login.ui
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -62,11 +63,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.docband.docband.newUser.ui.UserState
 import com.docband.docband.ui.theme.DocBandTheme
 import java.time.Instant
 import java.time.ZoneId
-
 
 @Composable
 fun NewUserR(navController: NavController, viewModel: NewUserModel) {
@@ -886,7 +888,7 @@ fun Gender(generV: String, onTextFieldChange: (String) -> Unit) {
 
     Spacer(modifier = Modifier.padding(5.dp))
 
-    val options = listOf( " ", "Masculino", "Femenino", "Otro")
+    val options = listOf( "", "Masculino", "Femenino", "Otro")
     var expanded by remember { mutableStateOf(false) }
     var gender by remember { mutableStateOf(options[0]) }
 
@@ -974,7 +976,7 @@ fun Etnia(etniaV: String, onTextFieldChange: (String) -> Unit) {
 
     Spacer(modifier = Modifier.padding(5.dp))
 
-    textsRegister(inputText = "Religión")
+    textsRegister(inputText = "Etnia")
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -1205,7 +1207,7 @@ fun Coffee(coffeeV: String, onTextFieldChange: (String) -> Unit) {
 
     Spacer(modifier = Modifier.padding(5.dp))
 
-    textsRegister(inputText = "Alcohol")
+    textsRegister(inputText = "Cafeina")
 
     Spacer(modifier = Modifier.padding(5.dp))
 
@@ -1381,21 +1383,16 @@ fun ButtonRegister(
     coffee: String,
     emailUser: String,
     passwordNewUser: String,
-    rPasswordNewUser: String
-) {
+    rPasswordNewUser: String) {
 
     val context = LocalContext.current
+    var a : Boolean = false
 
     Spacer(modifier = Modifier.padding(15.dp))
     Button(
         onClick = {
 
-            if (med) {
-                Toast.makeText(context, "Registro Exitoso (medico)", Toast.LENGTH_SHORT).show()
-                navController.popBackStack()
-
-            } else {
-                viewModel.sendUserData(
+                var allRight : UserState = viewModel.validateAllFields(
                     name,
                     cedula,
                     gender,
@@ -1415,10 +1412,42 @@ fun ButtonRegister(
                     emailUser,
                     passwordNewUser,
                     rPasswordNewUser)
-                Toast.makeText(context, "Registro Exitoso (Paciente)", Toast.LENGTH_SHORT).show()
-                navController.popBackStack()
-            }
 
+                if (!allRight.flagUser) {
+
+                    Toast.makeText(context, allRight.nameError, Toast.LENGTH_SHORT).show()
+
+                }
+
+                else{
+
+                    viewModel.sendUserData(
+                        name,
+                        cedula,
+                        gender,
+                        placeB,
+                        religion,
+                        address,
+                        usualAddress,
+                        phoneNumber,
+                        fPhoneNumber,
+                        occupation,
+                        etnia,
+                        typeBlood,
+                        food,
+                        drunk,
+                        smoke,
+                        coffee,
+                        emailUser,
+                        passwordNewUser,
+                        rPasswordNewUser)
+
+                    Toast.makeText(context, "Registro Exitoso (Paciente)", Toast.LENGTH_SHORT).show()
+
+                    navController.popBackStack()
+
+
+                }
         }, modifier
             .width(250.dp)
             .height(48.dp)

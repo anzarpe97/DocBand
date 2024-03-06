@@ -2,19 +2,15 @@ package com.docband.docband.login.ui
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.docband.docband.newUser.ui.AccountUser
 import com.docband.docband.newUser.ui.DataUser
 import com.docband.docband.newUser.ui.HabitsUser
+import com.docband.docband.newUser.ui.UserState
 import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
-
 
 class NewUserModel {
 
@@ -89,8 +85,6 @@ class NewUserModel {
     private val _newUserEnable = MutableLiveData<Boolean>()
     val newUserEnable: LiveData<Boolean> = _newUserEnable
 
-
-
     //Data Class
 
     fun sendUserData(
@@ -114,48 +108,13 @@ class NewUserModel {
         passwordNewUser: String,
         rPasswordNewUser: String
     ) {
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
         val db = Firebase.firestore
 
-        val userNew = DataUser(
-            name,
-            cedula,
-            gender,
-            placeB,
-            religion,
-            address,
-            usualAddress,
-            phoneNumber,
-            fPhoneNumber,
-            occupation,
-            etnia,
-            typeBlood
-        )
-
+        val userNew = DataUser(name, cedula, gender, placeB, religion, address, usualAddress, phoneNumber, fPhoneNumber, occupation, etnia, typeBlood)
         val habitsUser = HabitsUser(food, drunk, smoke, coffee)
         val accountUser = AccountUser(emailUser, passwordNewUser, cedula)
 
-        val flagInformation: Boolean = validatedData(
-            name,
-            cedula,
-            gender,
-            placeB,
-            religion,
-            address,
-            usualAddress,
-            phoneNumber,
-            fPhoneNumber,
-            occupation,
-            etnia,
-            typeBlood
-        )
-
-        val flagHabits : Boolean = validateHabits(food, drunk, smoke, coffee)
-        val flagAccount : Boolean = validateAccount(emailUser, passwordNewUser,rPasswordNewUser)
-
-        if (flagInformation) {
-            if (flagHabits){
-                if (flagAccount) {
 
                     db.collection("InformationUsers").document(cedula)
                         .set(userNew)
@@ -182,18 +141,10 @@ class NewUserModel {
                         .set(accountUser)
                         .addOnSuccessListener { Log.d(TAG, "Registro Cuenta Usuarios Exitosa!") }
                         .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
-                }
-            }
 
-        } else {
-
-            print("Hola guapo")
-
-        }
 
     }
 
-    //Capturar Valores
     fun onLoginChanged(
         name: String,
         cedula: String,
@@ -248,207 +199,346 @@ class NewUserModel {
 
     }
 
-    fun validatedData(
-        name: String,
-        cedula: String,
-        gender: String,
-        placeB: String,
-        religion: String,
-        address: String,
-        usualAddress: String,
-        phoneNumber: String,
-        fPhoneNumber: String,
-        occupation: String,
-        etnia: String,
-        typeBlood: String
-    ): Boolean {
+    fun validateAllFields (name: String,
+                           cedula: String,
+                           gender: String,
+                           placeB: String,
+                           religion: String,
+                           address: String,
+                           usualAddress: String,
+                           phoneNumber: String,
+                           fPhoneNumber: String,
+                           occupation: String,
+                           etnia: String,
+                           typeBlood: String,
+                           food: String,
+                           drunk: String,
+                           smoke: String,
+                           coffee: String,
+                           email: String,
+                           password: String,
+                           rPassword: String) : UserState{
 
-        val len = cedula.length
-        Log.d("Docband ERROR: ", "Esta Mierda: $len")
-        var allRight: Boolean = true
+        var test : UserState = UserState( true , "")
 
-        if (name == "") {
+        //Nombre
+        if (test.flagUser){
 
-            Log.d("Docband ERROR: ", "Campo Nombre Vacio")
-            allRight = false
-
-        }
-
-        if (cedula == "") {
-
-            Log.d("Docband ERROR: ", "Campo Cedula Vacio")
-            allRight = false
+            test = validateNameInput(name)
 
         }
 
-        if (len < 6) {
+        //Cedula
+        if (test.flagUser){
 
-            Log.d("Docband ERROR: ", "Campo Cedula Invalido")
-            allRight = false
-        }
-
-        if (len > 8) {
-
-            Log.d("Docband ERROR: ", "Campo Cedula Invalido")
-            allRight = false
-        }
-
-        if (gender == "") {
-
-            Log.d("Docband ERROR: ", "Campo Genero Vacio")
-            allRight = false
+            test = validateCedulaInput(cedula)
 
         }
 
-        if (placeB == "") {
+        //Genero
 
-            Log.d("Docband ERROR: ", "Campo Lugar Nacimiento Vacio")
-            allRight = false
+        if (test.flagUser){
 
-        }
-
-        if (religion == "") {
-
-            Log.d("Docband ERROR: ", "Campo Religion Vacio")
-            allRight = false
+            test = validateComboBox(gender,"Genero" )
 
         }
 
-        if (address == "") {
+        //Lugar De Nacimiento
 
-            Log.d("Docband ERROR: ", "Campo Direccion Vacio")
-            allRight = false
+        if (test.flagUser){
 
-        }
-
-        if (usualAddress == "") {
-
-            Log.d("Docband ERROR: ", "Campo Direccion Habitual Vacio")
-            allRight = false
+            test = validateEmptyTextField(placeB, "Lugar de Nacimiento")
 
         }
 
-        if (phoneNumber == "") {
+        // Religion
 
-            Log.d("Docband ERROR: ", "Campo Numero de telefono Vacio")
-            allRight = false
+        if (test.flagUser){
 
-        }
-
-        if (fPhoneNumber == "") {
-
-            Log.d("Docband ERROR: ", "Campo Familiar Numero de telefono Vacio")
-            allRight = false
-        }
-
-        if (occupation == "") {
-
-            Log.d("Docband ERROR: ", "Campo Trabajo Vacio")
-            allRight = false
+            test = validateComboBox(religion,"Religión" )
 
         }
 
-        if (occupation == "") {
+        if (test.flagUser){
 
-            Log.d("Docband ERROR: ", "Campo Trabajo Vacio")
-            allRight = false
-
-        }
-
-        if (etnia == "") {
-
-            Log.d("Docband ERROR: ", "Campo Etnia Vacio")
-            allRight = false
+            test = validateEmptyTextField(address, "Dirección")
 
         }
 
-        if (typeBlood == "") {
+        if (test.flagUser){
 
-            Log.d("Docband ERROR: ", "Campo Tipo de Sangre Vacio")
-            allRight = false
+            test = validateEmptyTextField(usualAddress, "Dirección Habitual")
 
         }
 
-        return allRight
 
+        if (test.flagUser){
+
+            test = validateEmptyTextField(phoneNumber, "Número De Telefono")
+
+        }
+
+        if (test.flagUser){
+
+            test = validateEmptyTextField(fPhoneNumber, "Numero Familiar")
+
+        }
+
+
+        if (test.flagUser){
+
+            test = validateEmptyTextField(occupation, "Ocupación")
+
+        }
+
+        if (test.flagUser){
+
+            test = validateComboBox(etnia,"Étnia" )
+
+        }
+
+        Log.d("Docband ERROR: ", "Paso 11")
+        Log.d("Docband ERROR: ", "test : $test")
+
+        if (test.flagUser){
+
+            test = validateComboBox(typeBlood,"Tipo De Sangre" )
+
+        }
+
+        Log.d("Docband ERROR: ", "Paso 12")
+        Log.d("Docband ERROR: ", "test : $test")
+
+        if (test.flagUser){
+
+            test = validateComboBox(food,"Alimentación" )
+
+        }
+
+        Log.d("Docband ERROR: ", "Paso 13")
+        Log.d("Docband ERROR: ", "test : $test")
+
+        if (test.flagUser){
+
+            test = validateComboBox(drunk,"Bebidas" )
+
+        }
+
+        Log.d("Docband ERROR: ", "Paso 14")
+        Log.d("Docband ERROR: ", "test : $test")
+
+        if (test.flagUser){
+
+            test = validateComboBox(smoke,"Tabáquico" )
+
+        }
+
+        if (test.flagUser){
+
+            test = validateComboBox(coffee,"Café" )
+
+        }
+
+        if (test.flagUser){
+
+            test = validateEmailInput (email)
+
+        }
+
+        if (test.flagUser){
+
+            test = validatePasswordInput(password,rPassword)
+
+        }
+
+        return test
     }
 
+    fun validatePasswordInput (password1: String, password2 : String) : UserState {
 
-    fun validateHabits (food: String,
-                        drunk: String,
-                        smoke: String,
-                        coffee: String) : Boolean {
+            if (password1 != password2){
 
-        var flag : Boolean = true
-
-        if (food == "") {
-
-            Log.d("Docband ERROR: ", "Campo Comida Vacio")
-            flag = false
-
-        }
-
-        if (drunk == "") {
-
-            Log.d("Docband ERROR: ", "Campo Bebidas Vacio")
-            flag = false
-
-        }
-
-        if (smoke == "") {
-
-            Log.d("Docband ERROR: ", "Campo Fumar Vacio")
-            flag = false
-
-        }
-
-        if (coffee == "") {
-
-            Log.d("Docband ERROR: ", "Campo Cafe Vacio")
-            flag = false
-
-        }
-
-        return flag
-
-    }
-
-    fun validateAccount (email: String,
-                        password: String,
-                        rPassword: String) : Boolean {
-
-        Log.d("Docband ERROR: ", password)
-        Log.d("Docband ERROR: ", rPassword)
-
-        var flag : Boolean = true
-
-        if (email == "") {
-
-            Log.d("Docband ERROR: ", "Campo Comida Vacio")
-            flag = false
-
-        }
-
-        if (password != "" && rPassword != "") {
-
-            if (password != rPassword) {
-
-                Log.d("Docband ERROR: ", "Contraseñas Distintas")
-                flag = false
+                return UserState(false, "Las Contraseñas No Son Iguales")
 
             }
-        }
 
-        else{
+            if (password1.length < 6){
 
-                Log.d("Docband ERROR: ", "Campos Vacios Contraseñas")
-                flag = false
+                return UserState(false, "La contraseña de debe contener mas de 6 Caracteres")
 
-        }
+            }
 
-        return flag
+            if (!password1.any{it.isUpperCase()}){
 
+                return UserState(false, "La Contraseña Debe Contener un Caracter En Mayuscula")
+
+             }
+
+
+            if (!password1.any{it.isLowerCase()}){
+
+                return UserState(false, "La Contraseña Debe Contener un Caracter En Minuscula")
+
+             }
+
+            if (!password1.any{it.isDigit()}){
+
+            return UserState(false, "La Contraseña Debe Contener Un Numero")
+
+            }
+
+            if (!password1.any{!it.isLetter() && !it.isDigit()}){
+
+                return UserState(false, "La Contraseña Debe Contener un Caracter Especial")
+
+            }
+
+        return UserState()
     }
 
+    fun validateEmailInput (email : String) : UserState {
+
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+
+            return UserState(false, "Email incorrecto")
+        }
+
+        return UserState()
+    }
+
+    fun validateNameInput (name : String) : UserState {
+
+        var textNum :Boolean = onlyLetter(name)
+        var flag = true
+        val lName : Int = name.length
+        var message = ""
+
+        if (name == ""){
+
+            message = "El Campo Nombre Nombre esta Vacio"
+
+            flag = false
+
+            return UserState(flag, message)
+
+        }
+
+        if (lName < 4){
+
+            message = "Números de Caracteres mayor a 3"
+
+            flag = false
+
+            return UserState(flag, message)
+
+        }
+
+        if (!textNum){
+
+            message = "El Nombre No Puede Contener Números"
+
+            flag = false
+
+            return UserState(flag, message)
+
+        }
+
+
+        return UserState(flag, message)
+    }
+
+    fun validateCedulaInput (cedula: String) : UserState{
+        val lCedula = cedula.length
+        var flag = true
+        var message = ""
+
+        if (cedula == ""){
+
+            message = "El Campo cedula está Vacio"
+
+            flag = false
+
+        }
+
+        if (lCedula < 7){
+
+            message = "La Cedula Debe Ser Mayor a 1 Millón"
+
+            flag = false
+
+            return UserState(flag, message)
+
+        }
+
+        if (lCedula > 8){
+
+            message = "La Cedula Debe Ser Menor a 50 Millones"
+
+            flag = false
+
+            return UserState(flag, message)
+
+        }
+
+        return UserState(flag, message)
+    }
+
+    fun validateComboBox (data: String, content : String) : UserState{
+
+        var message = ""
+
+        if (data == ""){
+
+            message = "El Campo $content está Vacio"
+
+            return UserState(false, message)
+
+        }
+
+        return UserState(true, "")
+    }
+
+    fun validateEmptyTextField (data: String, content : String) : UserState{
+
+        var flag = true
+        var message = ""
+
+        if (data == ""){
+
+            message = "El Campo $content está Vacio"
+
+            flag = false
+
+        }
+
+        return UserState(flag, message)
+    }
+
+    fun onlyLetter(text: String): Boolean {
+
+        val regex = Regex("[^a-zA-Z ]")
+
+
+        return !regex.containsMatchIn(text)
+    }
+
+    fun rightDate (date: String): Boolean {
+        val regex = Regex("""^\d{2}/\d{2}/\d{4}$""")
+        if (!regex.matches(date)) return false
+
+        val dia = date.substring(0, 2).toInt()
+        val mes = date.substring(3, 5).toInt()
+        val anio = date.substring(6, 10).toInt()
+
+        return dia in 1..31 && mes in 1..12 && anio > 0
+    }
+
+    fun rightEmail (email: String): Boolean {
+
+        val regex = Regex("""^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.(?:[a-zA-Z]{2,6})""")
+
+        return regex.matches(email)
+    }
 
 }
