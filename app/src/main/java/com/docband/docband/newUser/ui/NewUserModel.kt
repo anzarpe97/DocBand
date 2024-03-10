@@ -1,5 +1,6 @@
 package com.docband.docband.login.ui
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.util.Log
 import android.util.Patterns
@@ -87,6 +88,7 @@ class NewUserModel {
 
     //Data Class
 
+    @SuppressLint("SuspiciousIndentation")
     fun sendUserData(
         name: String,
         cedula: String,

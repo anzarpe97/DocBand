@@ -14,6 +14,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,18 +31,23 @@ import com.docband.docband.ui.theme.montserratFamily
 
 
 @Composable
-fun HomeView(navHome : () -> Unit,qrView : () -> Unit){
+fun HomeView(navHome : () -> Unit,qrView : () -> Unit, viewModel: HomeViewModel){
+    val nameuserhome: String by viewModel.nameUserHome.observeAsState(initial = "")
     DocBandTheme {
 
         Column (modifier = Modifier.fillMaxSize()) {
 
-            BoxHeader(Modifier.fillMaxWidth(), "Usuario")
+            BoxHeader(Modifier.fillMaxWidth(), nameuserhome)
 
             Column (modifier = Modifier
                 .fillMaxSize()
                 .padding(40.dp),
                 verticalArrangement = Arrangement.Center){
+                Button(onClick = {viewModel.printCedula()},) {
 
+                    Text(text = "presionar", fontSize = 20.sp, fontFamily = montserratFamily)
+
+                }
                 InfoButton(Modifier.fillMaxWidth(), navHome)
                 Spacer(modifier = Modifier.padding(40.dp))
                 MyQR(Modifier.fillMaxWidth(), qrView)
@@ -55,7 +62,7 @@ fun HomeView(navHome : () -> Unit,qrView : () -> Unit){
 }
 
 @Composable
-fun BoxHeader(modifier: Modifier, userName : String) {
+fun BoxHeader(modifier: Modifier, nameuserhome: String) {
 
     Column (
         modifier
@@ -73,7 +80,7 @@ fun BoxHeader(modifier: Modifier, userName : String) {
 
         Spacer(modifier = Modifier.padding(10.dp))
 
-        Text(text = "Bienvenido, $userName", fontFamily = montserratFamily, fontWeight = FontWeight.SemiBold, fontSize = 20.sp, color = Color.White)
+        Text(text = "Bienvenido, $nameuserhome", fontFamily = montserratFamily, fontWeight = FontWeight.SemiBold, fontSize = 20.sp, color = Color.White)
 
     }
 

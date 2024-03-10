@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.docband.docband.Destinations.*
 import com.docband.docband.HomeView.HomeView
+import com.docband.docband.HomeView.HomeViewModel
 import com.docband.docband.InfoView.InfoView
 import com.docband.docband.login.ui.LoginScreen
 import com.docband.docband.login.ui.LoginViewModel
@@ -40,6 +41,7 @@ fun NavigationHost(){
             HomeView(
                 navHome = {NavControler.navigate(InfoView.route)},
                 qrView = {NavControler.navigate(QrView.route)},
+                HomeViewModel()
                 )
 
         }
