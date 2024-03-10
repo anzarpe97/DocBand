@@ -256,7 +256,7 @@ fun ButtonLog(
 
     Button(
         onClick = {
-            viewModel.singInWithEmailAndPassword(email,password,navHome)
+            viewModel.singIn(email, password, navHome)
                   }, modifier
             .width(250.dp)
             .height(48.dp),
